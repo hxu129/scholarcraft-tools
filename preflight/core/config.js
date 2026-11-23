@@ -30,7 +30,7 @@ export const LICENSE_PUBLIC_JWK = Object.freeze({
  */
 export const PURCHASE_URLS = Object.freeze({
   gumroad: 'https://hxucreativity28.gumroad.com/l/paperpreflight-pro',
-  mianbaoduo: 'https://mbd.pub/o/bread/paperpreflight-pro',
+  mianbaoduo: 'https://mbd.pub/o/bread/YZaWmJ5vaw==',
 });
 
 /**

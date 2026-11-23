@@ -28,7 +28,7 @@ export const PUBLIC_LICENSE_JWK = Object.freeze({
  */
 export const STOREFRONT_LINKS = Object.freeze({
   gumroad: 'https://hxucreativity28.gumroad.com/l/promptshield-pro',
-  mianbaoduo: 'https://mbd.pub/o/bread/promptshield-pro',
+  mianbaoduo: 'https://mbd.pub/o/bread/YZaWmJ5vbA==',
   supportEmail: 'hxucreativity28@gmail.com',
 });
 

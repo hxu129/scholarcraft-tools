@@ -29,7 +29,7 @@ export const LICENSE_PUBLIC_JWK = Object.freeze({
  * Replace placeholder slugs with your live storefront checkout URLs before release.
  */
 export const PURCHASE_URLS = Object.freeze({
-  mianbaoduo: 'https://mbd.pub/o/bread/citecheck-pro',
+  mianbaoduo: 'https://mbd.pub/o/bread/YZaWmJ5tbQ==',
   gumroad: 'https://hxucreativity28.gumroad.com/l/citecheck-pro',
   lemonsqueezy: 'https://hxucreativity28.gumroad.com/l/citecheck-pro',
 });

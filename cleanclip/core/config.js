@@ -25,7 +25,7 @@ export const PUBLIC_LICENSE_JWK = Object.freeze({
  * Storefront placeholders — replace with your live checkout URLs before listing.
  */
 export const STOREFRONT_LINKS = Object.freeze({
-  mianbaoduo: 'https://mbd.pub/o/bread/cleanclip-md-pro',
+  mianbaoduo: 'https://mbd.pub/o/bread/YZaWmJ5uZA==',
   gumroad: 'https://hxucreativity28.gumroad.com/l/cleanclip-md-pro',
   lemonSqueezy: 'https://hxucreativity28.gumroad.com/l/cleanclip-md-pro',
   supportEmail: 'hxucreativity28@gmail.com',
