@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline Double-Blind PDF Metadata &amp; Link Leak Checker (Zero Upload) | ScholarCraft Tools</title>
+  <meta name="description" content="Check compiled review PDFs 100% offline in your browser for hidden /Author, /Creator, XMP metadata, and clickable GitHub or lab /URI annotations before double-blind conference submission." />
+  <link rel="canonical" href="https://hxu129.github.io/scholarcraft-tools/tools/double-blind-pdf-metadata-checker/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hxu129.github.io/scholarcraft-tools/tools/double-blind-pdf-metadata-checker/" />
+  <meta property="og:title" content="Offline Double-Blind PDF Metadata &amp; Link Leak Checker (Zero Upload)" />
+  <meta property="og:description" content="Check compiled review PDFs 100% offline in your browser for hidden /Author, /Creator, XMP metadata, and clickable GitHub or lab /URI annotations before double-blind conference submission." />
+  <meta property="og:image" content="https://hxu129.github.io/scholarcraft-tools/assets/cover_all_access_bundle_1280x800.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="../../styles.css" />
+  <style>
+    .pseo-wrap { max-width: 980px; margin: 0 auto; padding: 36px 20px 72px; }
+    .crumb { font-size: 0.9rem; color: #64748b; margin-bottom: 14px; }
+    .crumb a { color: #2563eb; text-decoration: none; }
+    .pseo-hero h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.22; margin: 10px 0 14px; }
+    .pseo-hero .lead { font-size: 1.06rem; color: #475569; max-width: 780px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 28px; }
+    .btn-free { background: #059669; color: #fff; padding: 12px 18px; border-radius: 10px; font-weight: 700; text-decoration: none; display: inline-block; }
+    .btn-demo { background: #1d4ed8; color: #fff; padding: 12px 18px; border-radius: 10px; font-weight: 700; text-decoration: none; display: inline-block; }
+    .btn-pro { background: #0f172a; color: #fff; padding: 12px 18px; border-radius: 10px; font-weight: 600; text-decoration: none; display: inline-block; }
+    .preview-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; margin: 24px 0 32px; align-items: start; }
+    @media (max-width: 820px) { .preview-grid { grid-template-columns: 1fr; } }
+    .card-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px; }
+    .card-box img { width: 100%; border-radius: 10px; border: 1px solid #e2e8f0; display: block; }
+    .code-pre { background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 10px; overflow-x: auto; font-size: 0.86rem; line-height: 1.5; margin: 12px 0 0; }
+    .live-frame-wrap { border: 2px solid #cbd5e1; border-radius: 14px; overflow: hidden; background: #fff; margin: 24px 0 36px; }
+    .live-frame-bar { background: #0f172a; color: #f8fafc; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+    .live-frame-bar a { color: #93c5fd; text-decoration: none; font-weight: 600; }
+    .live-frame { width: 100%; height: 640px; border: 0; display: block; }
+    .faq-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; }
+    .faq-item summary { font-weight: 700; cursor: pointer; color: #0f172a; }
+    .faq-item p { margin: 10px 0 0; color: #475569; }
+    .rel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
+    .rel-card { display: flex; flex-direction: column; gap: 6px; padding: 16px; border: 1px solid #e2e8f0; border-radius: 12px; text-decoration: none; color: #0f172a; background: #fff; }
+    .rel-card span { color: #2563eb; font-size: 0.9rem; font-weight: 600; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "ScholarCraft PaperPreflight", "applicationCategory": "DeveloperApplication", "operatingSystem": "Web, Chrome, macOS, Windows, Linux", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "url": "https://hxu129.github.io/scholarcraft-tools/tools/double-blind-pdf-metadata-checker/"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why check the compiled binary PDF instead of only the .tex source?", "acceptedAnswer": {"@type": "Answer", "text": "Because LaTeX packages like hyperref, Word exports, and embedded figure PDFs often inject /Author metadata or clickable URIs that are invisible when skimming rendered pages."}}, {"@type": "Question", "name": "Is my PDF uploaded to a cloud scanner?", "acceptedAnswer": {"@type": "Answer", "text": "Never. Binary byte scanning executes strictly in browser JavaScript with zero network requests."}}, {"@type": "Question", "name": "Does it also check NeurIPS / ICML / ICLR LaTeX source leaks?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — drop .tex and .bib files alongside your PDF to inspect comments, \\thanks, \\acknowledgments, and self-citation phrasing."}}, {"@type": "Question", "name": "What does PaperPreflight Pro ($16 one-time) unlock?", "acceptedAnswer": {"@type": "Answer", "text": "Multi-file project ZIP auditing, 1-click comment & unused-bib sanitizer ZIP output, custom institution blocklists, and a zero-dependency Python CLI."}}]}</script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html"><span class="brand-mark">SC</span><span>ScholarCraft Tools</span></a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="../../index.html#products">All 6 Tools</a>
+        <a href="../../index.html#free-starters">Free $0+ Kits</a>
+        <a href="../../affiliates.html">Affiliates (40%)</a>
+        <a href="https://hxucreativity28.gumroad.com/l/all-access-pack" target="_blank" rel="noopener">Bundle ($49)</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pseo-wrap">
+    <div class="crumb"><a href="../../index.html">ScholarCraft Home</a> / <a href="../../index.html#guides">Workflow Guides</a> / PaperPreflight</div>
+    <section class="pseo-hero">
+      <span class="hero-badge">100% Local in Browser &middot; Zero Server Upload &middot; Free Live Tool</span>
+      <h1>Inspect Compiled PDFs Offline for Double-Blind /Author, XMP &amp; /URI Leaks</h1>
+      <p class="lead">Even when you strip names from page 1, pdfLaTeX, Word, and Overleaf often embed your name, institution, or personal GitHub URL inside binary PDF `/Author`, `/Creator`, XMP XML packets, or `/URI` link annotations.</p>
+      <div class="cta-row">
+        <a class="btn-demo" href="../../preflight/index.html" target="_blank" rel="noopener">Launch PaperPreflight Fullscreen (Free)</a>
+        <a class="btn-free" href="https://hxucreativity28.gumroad.com/l/paper-preflight-kit-free" target="_blank" rel="noopener">Download Free 25-Point Double-Blind Checklist ($0+)</a>
+        <a class="btn-pro" href="https://hxucreativity28.gumroad.com/l/paperpreflight-pro" target="_blank" rel="noopener">Get PaperPreflight Pro ($16 One-Time · Batch ZIP + Sanitizer)</a>
+      </div>
+    </section>
+
+    <section class="live-frame-wrap">
+      <div class="live-frame-bar">
+        <span>Interactive Browser Tool &mdash; PaperPreflight (runs locally on your machine)</span>
+        <a href="../../preflight/index.html" target="_blank" rel="noopener">Open Fullscreen &nearr;</a>
+      </div>
+      <iframe class="live-frame" src="../../preflight/index.html" title="PaperPreflight Interactive Tool" loading="lazy"></iframe>
+    </section>
+
+    <section class="preview-grid">
+      <div class="card-box">
+        <h2>Why Researchers &amp; Engineers Use PaperPreflight</h2>
+        <ul>
+        <li>Parses raw binary PDF trailers, Info dictionaries, XMP XML streams, and clickable `/URI` objects directly inside browser memory.</li>
+        <li>Flags personal GitHub, Hugging Face, ORCID, email, and lab homepage links before upload.</li>
+        <li>Simultaneously audits `.tex` and `.bib` files for leaked comments, acknowledgments, and broken \ref / \cite keys.</li>
+        <li>100% offline — your unpublished manuscript never leaves your laptop.</li>
+        </ul>
+        <h3 style="margin-top:18px;">Hidden Binary PDF Fields Audited Locally</h3>
+        <pre class="code-pre"><code>/Info Dictionary: /Author, /Creator, /Producer, /Title, /Subject, /Keywords
+XMP Packet XML:   dc:creator, pdf:Producer, xmp:CreatorTool
+Link Annotations: /URI (github.com/user, huggingface.co/user, mailto:, lab URLs)</code></pre>
+      </div>
+      <div class="card-box">
+        <h2>Visual Walkthrough</h2>
+        <img src="../../assets/demo_citecheck.gif" alt="PaperPreflight live workflow walkthrough" />
+        <p style="font-size:0.92rem;color:#475569;margin-top:12px;">
+          Want offline Chrome Side Panel access, batch ZIP exports, or zero-dependency Python CLIs? Use starter code <code>STARTER20</code> for 20% off any one-time Pro pack or the 6-tool bundle.
+        </p>
+        <a class="btn-free" style="margin-top:8px;" href="https://hxucreativity28.gumroad.com/l/paper-preflight-kit-free" target="_blank" rel="noopener">Get Free Starter Kit ($0+) + 20% Off Code</a>
+      </div>
+    </section>
+
+    <section style="margin-top:32px;">
+      <h2>Frequently Asked Questions</h2>
+        <details class="faq-item" open>
+          <summary>Why check the compiled binary PDF instead of only the .tex source?</summary>
+          <p>Because LaTeX packages like hyperref, Word exports, and embedded figure PDFs often inject /Author metadata or clickable URIs that are invisible when skimming rendered pages.</p>
+        </details>
+        <details class="faq-item" open>
+          <summary>Is my PDF uploaded to a cloud scanner?</summary>
+          <p>Never. Binary byte scanning executes strictly in browser JavaScript with zero network requests.</p>
+        </details>
+        <details class="faq-item" open>
+          <summary>Does it also check NeurIPS / ICML / ICLR LaTeX source leaks?</summary>
+          <p>Yes — drop .tex and .bib files alongside your PDF to inspect comments, \thanks, \acknowledgments, and self-citation phrasing.</p>
+        </details>
+        <details class="faq-item" open>
+          <summary>What does PaperPreflight Pro ($16 one-time) unlock?</summary>
+          <p>Multi-file project ZIP auditing, 1-click comment &amp; unused-bib sanitizer ZIP output, custom institution blocklists, and a zero-dependency Python CLI.</p>
+        </details>
+    </section>
+
+    <section style="margin-top:36px;">
+      <h2>Related Local-First Research Tools</h2>
+      <div class="rel-grid">
+        <a class="rel-card" href="../latex-anonymize-comments-checker/"><strong>Audit LaTeX Source Files for Hidden Comments, Acknowledgments &amp; Broken Refs</strong><span>Open interactive guide &rarr;</span></a>
+        <a class="rel-card" href="../bibtex-retraction-checker/"><strong>Audit .bib Files for Retracted Papers &amp; Hallucinated AI Citations Locally</strong><span>Open interactive guide &rarr;</span></a>
+        <a class="rel-card" href="../ablation-table-bold-best-latex/"><strong>Auto-Format ML Ablation Tables in LaTeX with Bold #1, Underline #2 &amp; Baseline Δ</strong><span>Open interactive guide &rarr;</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>ScholarCraft Tools &middot; One-Time Licenses &middot; Zero Subscriptions &middot; <a href="../../terms.html">Terms</a> &middot; <a href="../../privacy.html">Privacy</a> &middot; <a href="../../refund.html">Refunds</a></p>
+    </div>
+  </footer>
+</body>
+</html>
