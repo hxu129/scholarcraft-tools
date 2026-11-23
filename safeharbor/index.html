@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeHarbor Studio Pro — Offline HIPAA 18-Identifier De-Identification &amp; IRB Audit</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%230b6e75' d='M16 2L4 7v8.5c0 7.1 5.1 13.7 12 15.5 6.9-1.8 12-8.4 12-15.5V7L16 2z'/%3E%3Cpath fill='%23ffffff' d='M14.5 10h3v4.5H22v3h-4.5V22h-3v-4.5H10v-3h4.5V10z'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Clinical Header -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
+            <path d="M16 2.5L4.5 7.2v8.2c0 6.8 4.9 13.1 11.5 14.8 6.6-1.7 11.5-8 11.5-14.8V7.2L16 2.5z" fill="#0b6e75"/>
+            <path d="M14.4 9.8h3.2v4.6h4.6v3.2h-4.6v4.6h-3.2v-4.6H9.8v-3.2h4.6V9.8z" fill="#ffffff"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-row">
+            <h1 class="brand-title">SafeHarbor Studio Pro</h1>
+            <span id="tierBadge" class="tier-badge tier-free">FREE</span>
+            <span id="offlinePill" class="offline-pill">100% Offline · Zero Upload</span>
+          </div>
+          <p id="appTagline" class="brand-tagline"></p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="licenseBtn" type="button" class="btn btn-primary btn-sm"></button>
+        <button id="langBtn" type="button" class="btn btn-ghost btn-sm" aria-label="Switch Language">中文</button>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <!-- Top Grid: Dataset Input + Global De-Identification Policy -->
+      <section class="upper-grid">
+        <!-- Step 1: Dataset Input -->
+        <div class="panel input-panel" id="dropZone">
+          <div class="drop-overlay" id="dropOverlay" aria-hidden="true">
+            <div class="drop-overlay-box" id="dropHint"></div>
+          </div>
+
+          <div class="panel-head">
+            <h2 id="inputTitle" class="panel-title"></h2>
+            <span id="detectedMeta" class="detected-meta"></span>
+          </div>
+
+          <div class="quick-actions">
+            <button id="benchmarkBtn" type="button" class="btn btn-primary btn-sm"></button>
+            <button id="uploadBtn" type="button" class="btn btn-outline btn-sm"></button>
+            <input id="fileInput" type="file" accept=".csv,.tsv,.txt" class="hidden" />
+            <button id="clearBtn" type="button" class="btn btn-ghost btn-sm"></button>
+          </div>
+
+          <textarea
+            id="dataInput"
+            class="data-textarea"
+            rows="7"
+            spellcheck="false"
+          ></textarea>
+
+          <!-- Free Row Cap Notice -->
+          <div id="freeRowBanner" class="notice-banner hidden">
+            <div class="notice-copy">
+              <strong id="freeRowBannerTitle"></strong>
+              <p id="freeRowBannerBody"></p>
+            </div>
+            <button id="unlockFromRowBannerBtn" type="button" class="btn btn-amber btn-sm"></button>
+          </div>
+
+          <!-- Free Date Shift Gate Notice -->
+          <div id="freeShiftBanner" class="notice-banner hidden">
+            <div class="notice-copy">
+              <strong id="freeShiftNoticeTitle"></strong>
+              <p id="freeShiftNoticeBody"></p>
+            </div>
+            <button id="unlockFromShiftBannerBtn" type="button" class="btn btn-amber btn-sm"></button>
+          </div>
+
+          <p id="privacyNote" class="privacy-note"></p>
+        </div>
+
+        <!-- Global Policy Panel -->
+        <div class="panel policy-panel">
+          <div class="panel-head">
+            <h2 id="policyTitle" class="panel-title"></h2>
+            <span class="cfr-pill">45 CFR § 164.514(b)(2)</span>
+          </div>
+
+          <div class="policy-grid">
+            <label class="field field-full">
+              <span id="dateModeLabel" class="field-label"></span>
+              <select id="dateModeSelect" class="select-input">
+                <option value="year_only" id="optDateYearOnly"></option>
+                <option value="consistent_shift" id="optDateConsistentShift"></option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span id="shiftRangeLabel" class="field-label"></span>
+              <input id="shiftRangeInput" type="number" class="text-input" min="1" max="3650" value="180" />
+            </label>
+
+            <label class="field">
+              <span id="refYearLabel" class="field-label"></span>
+              <input id="refYearInput" type="number" class="text-input" min="1990" max="2100" value="2026" />
+            </label>
+
+            <label class="field field-full">
+              <span id="studySaltLabel" class="field-label"></span>
+              <input id="studySaltInput" type="text" class="text-input mono" value="safeharbor-study-2026" spellcheck="false" />
+            </label>
+
+            <label class="field">
+              <span id="protocolIdLabel" class="field-label"></span>
+              <input id="protocolIdInput" type="text" class="text-input" placeholder="e.g. IRB-2026-0412" />
+            </label>
+
+            <label class="field">
+              <span id="investigatorLabel" class="field-label"></span>
+              <input id="investigatorInput" type="text" class="text-input" placeholder="e.g. Dr. A. Researcher" />
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 2: 18-Identifier Column Scan & Per-Column Overrides -->
+      <section class="panel columns-panel" id="columnsPanel">
+        <div class="panel-head">
+          <h2 id="columnsTitle" class="panel-title"></h2>
+          <button id="resetOverridesBtn" type="button" class="btn btn-ghost btn-sm hidden"></button>
+        </div>
+
+        <div id="columnsEmptyState" class="empty-inline"></div>
+
+        <div id="columnsTableWrap" class="table-scroll hidden">
+          <table class="rules-table">
+            <thead>
+              <tr>
+                <th id="thColName"></th>
+                <th id="thColDetected"></th>
+                <th id="thColRule"></th>
+                <th id="thColAffected" class="num"></th>
+              </tr>
+            </thead>
+            <tbody id="columnsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Step 3: Export Action Bar -->
+      <section class="panel export-panel">
+        <div class="panel-head">
+          <h2 id="exportTitle" class="panel-title"></h2>
+          <div id="exportHashPreview" class="hash-chip mono"></div>
+        </div>
+
+        <div class="export-buttons">
+          <button id="exportCsvBtn" type="button" class="btn btn-primary" disabled></button>
+          <button id="exportCertHtmlBtn" type="button" class="btn btn-outline" disabled>
+            <span id="exportCertHtmlLabel"></span>
+            <span class="pro-tag" id="tagCertHtml">PRO</span>
+          </button>
+          <button id="exportCertJsonBtn" type="button" class="btn btn-outline" disabled>
+            <span id="exportCertJsonLabel"></span>
+            <span class="pro-tag" id="tagCertJson">PRO</span>
+          </button>
+          <button id="exportReidBtn" type="button" class="btn btn-danger-outline" disabled>
+            <span id="exportReidLabel"></span>
+            <span class="pro-tag" id="tagReid">PRO</span>
+          </button>
+          <button id="exportZipBtn" type="button" class="btn btn-teal-soft" disabled>
+            <span id="exportZipLabel"></span>
+            <span class="pro-tag" id="tagZip">PRO</span>
+          </button>
+          <button id="exportCliBtn" type="button" class="btn btn-ghost">
+            <span id="exportCliLabel"></span>
+            <span class="pro-tag" id="tagCli">PRO</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 4: Live Preview & Compliance Audit Tabs -->
+      <section class="panel workspace-panel">
+        <div class="tab-bar" role="tablist">
+          <button type="button" class="tab-btn active" data-tab="diff" id="tabDiffBtn" role="tab"></button>
+          <button type="button" class="tab-btn" data-tab="clean" id="tabCleanBtn" role="tab"></button>
+          <button type="button" class="tab-btn" data-tab="audit" id="tabAuditBtn" role="tab"></button>
+          <button type="button" class="tab-btn" data-tab="reid" id="tabReidBtn" role="tab"></button>
+        </div>
+
+        <!-- Tab 1: Before / After Diff Preview -->
+        <div id="panelDiff" class="tab-pane active">
+          <div class="diff-toolbar">
+            <div class="legend-row">
+              <span class="legend-chip legend-dropped" id="legendDropped"></span>
+              <span class="legend-chip legend-modified" id="legendModified"></span>
+              <span class="legend-chip legend-zeroed" id="legendZeroed"></span>
+              <span class="legend-chip legend-capped" id="legendCapped"></span>
+            </div>
+            <span id="diffCountMeta" class="detected-meta"></span>
+          </div>
+          <div id="diffContainer" class="table-scroll preview-scroll"></div>
+        </div>
+
+        <!-- Tab 2: Clean Output Table -->
+        <div id="panelClean" class="tab-pane">
+          <div id="cleanContainer" class="table-scroll preview-scroll"></div>
+        </div>
+
+        <!-- Tab 3: Compliance Audit Summary -->
+        <div id="panelAudit" class="tab-pane">
+          <div id="auditContainer" class="audit-wrap"></div>
+        </div>
+
+        <!-- Tab 4: PI-Only Re-ID Map -->
+        <div id="panelReid" class="tab-pane">
+          <div id="reidContainer" class="reid-wrap"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer Disclaimer -->
+    <footer class="app-footer">
+      <p id="footerDisclaimer"></p>
+    </footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <!-- License Activation Modal -->
+  <div id="licenseModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="licenseModalTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h2 id="licenseModalTitle" class="modal-title"></h2>
+          <p id="licenseSubtitle" class="modal-subtitle"></p>
+        </div>
+        <button id="closeLicenseModalBtn" type="button" class="btn btn-ghost btn-sm" aria-label="Close">✕</button>
+      </div>
+
+      <div class="tier-compare">
+        <div class="tier-col">
+          <h3 id="freeTierCol"></h3>
+          <ul id="freeFeaturesList"></ul>
+        </div>
+        <div class="tier-col tier-col-pro">
+          <h3 id="proTierCol"></h3>
+          <ul id="proFeaturesList"></ul>
+        </div>
+      </div>
+
+      <div class="buy-row">
+        <a id="buyGumroadLink" class="btn btn-primary" target="_blank" rel="noopener noreferrer"></a>
+        <a id="buyMbdLink" class="btn btn-outline" target="_blank" rel="noopener noreferrer"></a>
+      </div>
+
+      <div class="license-form">
+        <label for="licenseKeyInput" id="licenseInputLabel" class="field-label"></label>
+        <div class="license-input-row">
+          <input id="licenseKeyInput" type="text" class="text-input mono" spellcheck="false" autocomplete="off" />
+          <button id="activateLicenseBtn" type="button" class="btn btn-primary"></button>
+        </div>
+        <div id="licenseStatusMsg" class="license-status hidden"></div>
+        <div class="license-footer-actions">
+          <button id="deactivateLicenseBtn" type="button" class="btn btn-danger-outline btn-sm hidden"></button>
+          <button id="doneLicenseModalBtn" type="button" class="btn btn-ghost btn-sm"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Python CLI Modal -->
+  <div id="cliModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="cliModalTitle">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-head">
+        <div>
+          <h2 id="cliModalTitle" class="modal-title"></h2>
+          <p id="cliModalDesc" class="modal-subtitle"></p>
+        </div>
+        <button id="closeCliModalBtn" type="button" class="btn btn-ghost btn-sm" aria-label="Close">✕</button>
+      </div>
+
+      <pre id="cliCommandPre" class="cli-code"></pre>
+
+      <div class="modal-actions-end">
+        <button id="copyCliCmdBtn" type="button" class="btn btn-primary btn-sm"></button>
+        <button id="doneCliModalBtn" type="button" class="btn btn-ghost btn-sm"></button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
