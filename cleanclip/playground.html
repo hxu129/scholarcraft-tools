@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CleanClip MD Pro — Interactive Playground</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="playground-mode">
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark">M↓</span>
+      <span class="brand-title">CleanClip MD Pro · Interactive Playground</span>
+      <span id="pgTierBadge" class="badge">FREE</span>
+    </div>
+    <div class="header-actions">
+      <span class="badge badge-ok">100% Local · Zero Telemetry</span>
+      <button id="pgLangBtn" class="lang-btn" type="button">EN</button>
+    </div>
+  </header>
+
+  <main class="pg-container">
+    <div id="fileProtocolWarn" class="notice notice-pro hidden">
+      <strong>Tip:</strong> Opening ES modules directly via <code>file://</code> can be blocked by browser CORS rules.
+      Run <code>python3 -m http.server 8765</code> inside <code>clipmd-pro/</code> and open
+      <code>http://127.0.0.1:8765/playground.html</code>, or open this page from the loaded Chrome Extension.
+    </div>
+
+    <section class="pg-hero">
+      <div>
+        <h2 style="margin:0 0 4px;font-size:17px;">双语复杂网页净化与 LaTeX 保留测试工作台</h2>
+        <p class="muted-text" style="font-size:12.5px;">
+          Live-test KaTeX, MathJax v2/v3, arXiv LaTeXML, Wikipedia math, GFM tables, fenced code blocks, noise stripping, bilingual token estimation, and UTF-8 Obsidian batch ZIP export.
+        </p>
+      </div>
+      <div class="inline-row" style="flex-wrap:wrap;">
+        <button class="btn btn-sm sample-btn" data-sample="full" type="button">Full Stress Sample (All Math)</button>
+        <button class="btn btn-sm sample-btn" data-sample="arxiv" type="button">arXiv HTML5 Paper</button>
+        <button class="btn btn-sm sample-btn" data-sample="zhihu" type="button">知乎双语技术长文</button>
+      </div>
+    </section>
+
+    <section class="pg-grid">
+      <!-- Left: Raw HTML Source -->
+      <div class="pg-panel">
+        <div class="card-header">
+          <h3 class="card-title">1. Input HTML + Source URL</h3>
+          <button id="pgRunBtn" class="btn btn-sm btn-primary" type="button">Extract Markdown</button>
+        </div>
+        <div class="field">
+          <label for="pgUrlInput">Simulated Page URL (drives site-aware adapters &amp; absolute link resolution)</label>
+          <input id="pgUrlInput" class="text-input" type="url" value="https://arxiv.org/html/2501.01234v1">
+        </div>
+        <textarea id="pgHtmlInput" class="pg-textarea" spellcheck="false"></textarea>
+      </div>
+
+      <!-- Right: Live Clean Markdown Output -->
+      <div class="pg-panel">
+        <div class="card-header">
+          <h3 class="card-title">2. Extracted Clean Markdown</h3>
+          <div class="inline-row">
+            <span id="pgAdapterBadge" class="badge">Adapter: —</span>
+            <span id="pgMathBadge" class="badge badge-accent">∑ 0 math</span>
+          </div>
+        </div>
+
+        <div class="controls-row">
+          <select id="pgPresetSelect" class="select-input">
+            <option value="obsidian">Obsidian Standard (YAML Frontmatter)</option>
+            <option value="llm">LLM Prompt Ready (&lt;document&gt; wrapper)</option>
+            <option value="academic">Academic Paper Note</option>
+            <option value="custom">Custom Template (Pro)</option>
+          </select>
+        </div>
+
+        <textarea id="pgMdOutput" class="pg-textarea" spellcheck="false" readonly></textarea>
+
+        <div class="token-bar">
+          <span>Est. Tokens: <strong id="pgTokens" class="token-primary">0</strong></span>
+          <span id="pgContext">128k: 0% · 200k: 0%</span>
+          <span id="pgStats">Chars: 0 · Words: 0 · CJK: 0</span>
+        </div>
+
+        <div class="btn-row">
+          <button id="pgCopyMdBtn" class="btn btn-primary" type="button">Copy Markdown</button>
+          <button id="pgCopyLlmBtn" class="btn btn-accent" type="button">Copy LLM Prompt</button>
+          <button id="pgDownloadMdBtn" class="btn" type="button">Download .md</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="pg-footer-grid">
+      <!-- Batch ZIP Demo -->
+      <div class="pg-panel">
+        <div class="card-header">
+          <h3 class="card-title">3. Multi-Tab Obsidian ZIP Test (UTF-8 + CRC-32 + _INDEX.md)</h3>
+          <span class="mini-pro">PRO</span>
+        </div>
+        <p class="muted-text">
+          Packages all 3 bilingual sample pages (including Chinese filenames) into a pure-JS standard ZIP archive with clickable Obsidian <code>[[wikilinks]]</code> in <code>_INDEX.md</code>.
+        </p>
+        <div id="pgZipStatus" class="notice hidden"></div>
+        <div class="inline-row">
+          <button id="pgBatchZipBtn" class="btn btn-accent" type="button">Generate &amp; Download 3-Note Obsidian .zip</button>
+        </div>
+      </div>
+
+      <!-- Offline ECDSA P-256 License Tester -->
+      <div class="pg-panel">
+        <div class="card-header">
+          <h3 class="card-title">4. Offline ECDSA P-256 Pro License Verifier</h3>
+          <span id="pgLicensePill" class="badge">FREE</span>
+        </div>
+        <p class="muted-text">
+          Paste any signed <code>CLIP1.&lt;payload&gt;.&lt;sig&gt;</code> key to verify locally via WebCrypto <code>crypto.subtle</code> (zero server calls).
+        </p>
+        <div class="inline-row">
+          <input id="pgLicenseInput" class="text-input" type="text" placeholder="CLIP1.xxxx.yyyy" spellcheck="false">
+          <button id="pgActivateBtn" class="btn btn-primary btn-sm" type="button">Verify &amp; Activate</button>
+          <button id="pgClearLicenseBtn" class="btn btn-sm" type="button">Clear</button>
+        </div>
+        <div id="pgLicenseFeedback" class="notice hidden"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if (location.protocol === 'file:') {
+      document.getElementById('fileProtocolWarn').classList.remove('hidden');
+    }
+  </script>
+  <script type="module" src="playground.js"></script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromptShield Pro — 100% Local AI Privacy Redactor & Restorer</title>
+  <link rel="icon" type="image/png" href="icons/icon48.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Security Vault Header -->
+    <header class="top-bar">
+      <div class="brand">
+        <img class="brand-icon" src="icons/icon48.png" alt="PromptShield Pro" width="28" height="28" />
+        <div class="brand-text">
+          <div class="brand-row">
+            <h1 class="brand-title">PromptShield Pro</h1>
+            <span id="tierBadge" class="badge badge-free">免费版</span>
+          </div>
+          <p id="appTagline" class="brand-sub">100% 本地零联网 AI 隐私脱敏与一键还原</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="zeroNetBadge" class="badge badge-emerald" title="Zero network calls for redaction, restoration, or offline SHD1.* license verification">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span id="zeroNetText">100% 本地 · 零联网</span>
+        </span>
+        <button id="langToggleBtn" class="btn btn-ghost btn-sm" type="button">EN</button>
+      </div>
+    </header>
+
+    <!-- Optional Active AI Chat Bridge Strip (Chrome Extension Side Panel) -->
+    <section id="chatBridgeBar" class="chat-bridge">
+      <div class="chat-bridge-info">
+        <span class="chat-bridge-label" id="chatBridgeTitle">AI 聊天页直连</span>
+        <span class="badge badge-pro-mini" id="chatBridgeProTag">PRO</span>
+        <span class="chat-bridge-status" id="chatBridgeStatus">检测中...</span>
+      </div>
+      <div class="chat-bridge-actions" id="chatBridgeActions">
+        <button id="btnPullDraft" class="btn btn-secondary btn-xs" type="button">读取输入框并脱敏</button>
+        <button id="btnPushSafe" class="btn btn-emerald btn-xs" type="button">写回安全 Prompt</button>
+        <button id="btnPullReply" class="btn btn-amber btn-xs" type="button">读取 AI 回复并还原</button>
+      </div>
+    </section>
+
+    <!-- Primary Navigation Tabs -->
+    <nav class="tab-nav" role="tablist" aria-label="PromptShield Views">
+      <button class="tab-btn active" role="tab" aria-selected="true" data-tab="prompt" id="tabBtnPrompt" type="button">
+        <span id="tabLabelPrompt">脱敏与还原</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="batch" id="tabBtnBatch" type="button">
+        <span id="tabLabelBatch">批量文件脱敏</span>
+        <span class="badge badge-pro-mini">PRO</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="rules" id="tabBtnRules" type="button">
+        <span id="tabLabelRules">规则与激活</span>
+      </button>
+    </nav>
+
+    <!-- Live Status Toast -->
+    <div id="toastBanner" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <!-- ================================================================
+         TAB 1: PROMPT SANITIZE & RESTORE (100% FREE UNLIMITED)
+         ================================================================ -->
+    <main id="panelPrompt" class="tab-panel active" role="tabpanel">
+      <!-- Detector Category Chips & Quick Toolbar -->
+      <section class="toolbar-card">
+        <div class="toolbar-row">
+          <div class="btn-group">
+            <button id="btnLoadDemo" class="btn btn-emerald btn-sm" type="button">加载演示样本</button>
+            <button id="btnClearPrompt" class="btn btn-ghost btn-sm" type="button">清空</button>
+            <button id="btnResetVault" class="btn btn-ghost btn-sm" type="button">重置映射表</button>
+          </div>
+          <div class="btn-group">
+            <button id="btnExportVault" class="btn btn-secondary btn-sm" type="button">导出映射表 JSON</button>
+            <button id="btnImportVault" class="btn btn-secondary btn-sm" type="button">导入映射表</button>
+            <input id="vaultFileInput" type="file" accept=".json,application/json" class="hidden" />
+          </div>
+        </div>
+
+        <div class="category-chips" id="categoryChips" aria-label="Detector Categories">
+          <button class="cat-chip active" data-cat="secrets" type="button">
+            <span class="cat-dot dot-rose"></span>
+            <span class="cat-name" id="catLabelSecrets">密钥与连接串</span>
+            <span class="cat-count" id="catCountSecrets">0</span>
+          </button>
+          <button class="cat-chip active" data-cat="api_keys" type="button">
+            <span class="cat-dot dot-rose"></span>
+            <span class="cat-name" id="catLabelApiKeys">云/AI API Key</span>
+            <span class="cat-count" id="catCountApiKeys">0</span>
+          </button>
+          <button class="cat-chip active" data-cat="pii" type="button">
+            <span class="cat-dot dot-amber"></span>
+            <span class="cat-name" id="catLabelPii">个人/金融 PII</span>
+            <span class="cat-count" id="catCountPii">0</span>
+          </button>
+          <button class="cat-chip active" data-cat="network" type="button">
+            <span class="cat-dot dot-sky"></span>
+            <span class="cat-name" id="catLabelNetwork">IP 与网络</span>
+            <span class="cat-count" id="catCountNetwork">0</span>
+          </button>
+          <button class="cat-chip active" data-cat="custom" type="button">
+            <span class="cat-dot dot-violet"></span>
+            <span class="cat-name" id="catLabelCustom">自定义词/正则</span>
+            <span class="cat-count" id="catCountCustom">0</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Responsive 2-Column Workbench (Stacks at 380px Side Panel) -->
+      <div class="workbench-grid">
+        <!-- Left Column: Raw Input -->
+        <section class="card">
+          <div class="card-head">
+            <h2 id="step1Title" class="card-title">1. 原始 Prompt</h2>
+            <label class="toggle-inline">
+              <input id="autoSanitizeToggle" type="checkbox" checked />
+              <span id="autoSanitizeLabel">输入时实时脱敏</span>
+            </label>
+          </div>
+          <textarea
+            id="rawPromptInput"
+            class="code-textarea"
+            rows="10"
+            spellcheck="false"
+            placeholder="在此粘贴包含 API Key、数据库连接串、JWT、邮箱、手机号、身份证、银行卡或客户名称的内容……"
+          ></textarea>
+          <div class="card-foot">
+            <span id="rawCharCount" class="meta-text">0 chars</span>
+            <button id="btnSanitizeNow" class="btn btn-emerald" type="button">一键本地脱敏</button>
+          </div>
+        </section>
+
+        <!-- Right Column: Visual Highlighted Safe Prompt -->
+        <section class="card">
+          <div class="card-head">
+            <h2 id="step2Title" class="card-title">2. 安全 Prompt</h2>
+            <div class="view-switch">
+              <button id="btnViewDiff" class="seg-btn active" type="button">高亮视图</button>
+              <button id="btnViewPlain" class="seg-btn" type="button">纯文本</button>
+            </div>
+          </div>
+
+          <div id="hitsSummaryBar" class="status-strip status-neutral">
+            未检测到敏感信息，当前文本安全可发送。
+          </div>
+
+          <div id="safeDiffPreview" class="diff-preview" tabindex="0" aria-label="Sanitized highlighted preview"></div>
+          <textarea
+            id="safePlainOutput"
+            class="code-textarea hidden"
+            rows="10"
+            readonly
+            spellcheck="false"
+          ></textarea>
+
+          <div class="card-foot">
+            <span id="safeMetaInfo" class="meta-text">0 tokens</span>
+            <button id="btnCopySafe" class="btn btn-emerald" type="button">复制安全 Prompt</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Session Reversible Vault Table -->
+      <section class="card vault-card">
+        <div class="card-head">
+          <div class="card-title-row">
+            <h2 id="vaultTitle" class="card-title">本地可逆映射表（Session Vault）</h2>
+            <span id="vaultCountBadge" class="badge badge-slate">0</span>
+          </div>
+          <button id="btnToggleReveal" class="btn btn-ghost btn-xs" type="button">显示原文</button>
+        </div>
+        <div id="vaultEmptyMsg" class="empty-hint">
+          尚无映射记录。脱敏后相同敏感词会自动复用同一个占位符（如 [EMAIL_1]），保持 AI 上下文推理完整。
+        </div>
+        <div id="vaultTableWrap" class="table-wrap hidden">
+          <table class="vault-table">
+            <thead>
+              <tr>
+                <th id="thVaultToken">占位符</th>
+                <th id="thVaultCat">类别</th>
+                <th id="thVaultVal">本地原值</th>
+                <th id="thVaultHits">次数</th>
+              </tr>
+            </thead>
+            <tbody id="vaultTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Step 3: Paste AI Reply -> 1-Click Lossless Restore -->
+      <section class="card restore-card">
+        <div class="card-head">
+          <h2 id="step3Title" class="card-title">3. 粘贴 AI 回复 → 本地一键无损还原</h2>
+          <button id="btnLoadDemoReply" class="btn btn-ghost btn-xs" type="button">填入演示 AI 回复</button>
+        </div>
+
+        <div class="restore-grid">
+          <div class="restore-col">
+            <textarea
+              id="aiReplyInput"
+              class="code-textarea"
+              rows="7"
+              spellcheck="false"
+              placeholder="把 ChatGPT / Claude / Gemini 返回的包含 [OPENAI_KEY_1]、[EMAIL_1] 等占位符的回复粘贴到这里……"
+            ></textarea>
+            <div class="card-foot">
+              <span class="meta-text" id="restoreHintMeta">100% Local Swap</span>
+              <button id="btnRestoreNow" class="btn btn-amber" type="button">一键无损还原</button>
+            </div>
+          </div>
+
+          <div class="restore-col">
+            <div id="restoreStatusBar" class="status-strip status-neutral hidden"></div>
+            <div id="unresolvedWarnBar" class="status-strip status-warn hidden"></div>
+            <div id="restoredPreview" class="diff-preview restore-preview" tabindex="0"></div>
+            <div class="card-foot">
+              <span class="meta-text" id="restoredMetaCount">0 restored</span>
+              <button id="btnCopyRestored" class="btn btn-emerald" type="button">复制还原结果</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================================================================
+         TAB 2: BATCH FILE / CSV / JSON SCRUBBER (PRO)
+         ================================================================ -->
+    <main id="panelBatch" class="tab-panel" role="tabpanel">
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2 id="batchTitle" class="card-title">批量 CSV / JSON / 日志 / 代码本地脱敏（Pro）</h2>
+            <p id="batchSubtitle" class="card-desc">多文件共享同一可逆映射表：跨文件的同一邮箱或密钥会映射为同一个占位符，并打包为标准 UTF-8 ZIP。</p>
+          </div>
+        </div>
+
+        <div id="batchProBanner" class="pro-gate-banner hidden">
+          <span id="batchProGateMsg">已为您预览首个文件脱敏效果。批量多文件打包导出 ZIP 与完整恢复映射下载为 Pro 功能。</span>
+          <button id="btnBatchGoUnlock" class="btn btn-amber btn-xs" type="button">前往激活 Pro</button>
+        </div>
+
+        <div id="batchDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop files for local scrubbing">
+          <p id="batchDropTitle" class="dropzone-title">拖放多个文件到此，或点击选择文件</p>
+          <p id="batchDropHint" class="dropzone-hint">支持 .csv, .tsv, .json, .jsonl, .log, .env, .py, .js, .ts, .sql, .txt, .md</p>
+          <div class="btn-group dropzone-btns">
+            <button id="btnPickBatchFiles" class="btn btn-secondary btn-sm" type="button">选择本地文件</button>
+            <button id="btnLoadDemoBatch" class="btn btn-emerald btn-sm" type="button">加载演示三件套 (CSV+JSON+Log)</button>
+            <button id="btnClearBatch" class="btn btn-ghost btn-sm" type="button">清空队列</button>
+          </div>
+          <input id="batchFileInput" type="file" multiple class="hidden"
+            accept=".csv,.tsv,.json,.jsonl,.ndjson,.log,.env,.py,.js,.mjs,.cjs,.ts,.tsx,.jsx,.sql,.txt,.md,.yaml,.yml,.xml,.ini,.conf,.sh" />
+        </div>
+      </section>
+
+      <div class="workbench-grid">
+        <!-- Left: Queue & CSV Column Selective Controls -->
+        <section class="card">
+          <div class="card-head">
+            <h3 id="batchFilesHeading" class="card-title">待处理文件队列</h3>
+            <span id="batchFileCountBadge" class="badge badge-slate">0</span>
+          </div>
+          <div id="batchEmptyState" class="empty-hint">
+            请拖入文件或点击“加载演示三件套”查看结构化 CSV / JSON 脱敏效果。
+          </div>
+          <ul id="batchFileList" class="file-list"></ul>
+
+          <!-- Dynamic CSV Column Selector -->
+          <div id="csvColumnPanel" class="csv-col-panel hidden">
+            <h4 id="batchCsvColumnsTitle" class="sub-heading">CSV / TSV 敏感列强制脱敏</h4>
+            <p id="batchCsvAutoNote" class="meta-text">未勾选的列仍会自动扫描 API Key、邮箱、手机号、身份证、银行卡等敏感信息。</p>
+            <div id="csvColumnChecks" class="col-check-grid"></div>
+          </div>
+
+          <!-- ZIP Export Controls -->
+          <div id="batchExportControls" class="export-box hidden">
+            <label class="toggle-block">
+              <input id="includeRestoreMapToggle" type="checkbox" />
+              <span id="batchIncludeMapLabel">将 restore_map.json 一并打入 ZIP（仅限本地备份；发给 AI 前请保持关闭！）</span>
+            </label>
+            <div id="includeMapWarnBox" class="status-strip status-warn hidden">
+              安全提醒：切勿把 restore_map.json 上传给任何外部 AI！
+            </div>
+            <div class="btn-group export-actions">
+              <button id="btnRunBatchZip" class="btn btn-emerald" type="button">批量脱敏并导出 ZIP</button>
+              <button id="btnDownloadMapOnly" class="btn btn-secondary btn-sm" type="button">单独下载 restore_map.json</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Live Sanitized File Preview -->
+        <section class="card">
+          <div class="card-head">
+            <h3 id="batchPreviewTitle" class="card-title">脱敏结果预览</h3>
+            <span id="batchPreviewMeta" class="badge badge-slate">—</span>
+          </div>
+          <pre id="batchPreviewCode" class="code-preview"></pre>
+        </section>
+      </div>
+    </main>
+
+    <!-- ================================================================
+         TAB 3: CUSTOM RULES, PROFILES & PRO LICENSE
+         ================================================================ -->
+    <main id="panelRules" class="tab-panel" role="tabpanel">
+      <div class="workbench-grid">
+        <!-- Left: Custom Terms, Custom Regex & Profiles -->
+        <div class="stack-col">
+          <section class="card">
+            <div class="card-head">
+              <h2 id="customTermsTitle" class="card-title">自定义敏感实体词</h2>
+            </div>
+            <p id="proRulesHint" class="meta-text mb-sm"></p>
+
+            <div class="form-row">
+              <input id="customTermInput" class="text-input" type="text" placeholder="例如：AcmeHealth Corp" />
+              <input id="customPrefixInput" class="text-input input-prefix" type="text" placeholder="ORG" value="ORG" />
+            </div>
+            <div class="form-row form-row-between">
+              <div class="check-pair">
+                <label class="toggle-inline">
+                  <input id="customCaseToggle" type="checkbox" />
+                  <span id="customCaseLabel">区分大小写</span>
+                </label>
+                <label class="toggle-inline">
+                  <input id="customWordToggle" type="checkbox" checked />
+                  <span id="customWordLabel">全词匹配</span>
+                </label>
+              </div>
+              <button id="btnAddTerm" class="btn btn-emerald btn-sm" type="button">添加实体词</button>
+            </div>
+            <ul id="customTermList" class="rule-list"></ul>
+          </section>
+
+          <section class="card">
+            <div class="card-head">
+              <h2 id="customRegexTitle" class="card-title">自定义正则规则（Pro）</h2>
+              <span class="badge badge-pro-mini">PRO</span>
+            </div>
+            <div class="form-col">
+              <div class="form-row">
+                <input id="customRegexNameInput" class="text-input" type="text" placeholder="规则名称（如 内部订单号）" />
+                <input id="customRegexPrefixInput" class="text-input input-prefix" type="text" placeholder="ORDER_ID" value="CUSTOM" />
+              </div>
+              <div class="form-row">
+                <input id="customRegexPatternInput" class="text-input mono" type="text" placeholder="正则表达式（如 ORD-[0-9]{8}）" />
+                <button id="btnAddRegex" class="btn btn-amber btn-sm" type="button">添加正则规则</button>
+              </div>
+              <div id="customRegexErrorBox" class="status-strip status-danger hidden"></div>
+            </div>
+            <ul id="customRegexList" class="rule-list"></ul>
+          </section>
+
+          <section class="card">
+            <div class="card-head">
+              <h2 id="profilesTitle" class="card-title">规则配置方案（Profiles · Pro）</h2>
+              <span class="badge badge-pro-mini">PRO</span>
+            </div>
+            <div class="form-row">
+              <input id="profileNameInput" class="text-input" type="text" placeholder="方案名称（如：医疗客户脱敏规则）" />
+              <button id="btnSaveProfile" class="btn btn-amber btn-sm" type="button">保存当前规则为方案</button>
+            </div>
+            <div id="profilesEmptyMsg" class="empty-hint">尚未保存自定义规则方案。</div>
+            <ul id="profilesList" class="rule-list"></ul>
+          </section>
+        </div>
+
+        <!-- Right: License Activation & Built-in Detector Matrix -->
+        <div class="stack-col">
+          <section class="card license-card">
+            <div class="card-head">
+              <h2 id="licenseTitle" class="card-title">Pro 离线授权激活（ECDSA P-256 零联网验证）</h2>
+            </div>
+
+            <div id="licenseStatusBox" class="status-strip status-neutral">
+              当前为免费版
+            </div>
+
+            <div class="form-row">
+              <input
+                id="licenseKeyInput"
+                class="text-input mono"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="SHD1.xxxx.yyyy"
+              />
+            </div>
+
+            <div class="btn-group">
+              <button id="btnActivateLicense" class="btn btn-emerald" type="button">本地验证并激活</button>
+              <button id="btnDeactivateLicense" class="btn btn-ghost btn-sm hidden" type="button">退出 Pro 授权</button>
+            </div>
+
+            <div id="licenseFeedback" class="status-strip hidden"></div>
+
+            <div class="purchase-links">
+              <a id="linkBuyMbd" class="btn btn-amber btn-sm" href="https://mbd.pub/o/bread/promptshield-pro" target="_blank" rel="noopener noreferrer">
+                面包多购买（微信/支付宝）
+              </a>
+              <a id="linkBuyGumroad" class="btn btn-secondary btn-sm" href="https://hxucreativity28.gumroad.com/l/promptshield-pro" target="_blank" rel="noopener noreferrer">
+                Gumroad 购买（国际卡/PayPal）
+              </a>
+            </div>
+
+            <div class="privacy-box">
+              <h3 id="privacyProofTitle" class="sub-heading">零联网隐私承诺</h3>
+              <p id="privacyProofDesc" class="meta-text"></p>
+            </div>
+          </section>
+
+          <section class="card">
+            <details open>
+              <summary id="detectorsListTitle" class="card-title summary-toggle">已启用内置检测器（30 项）</summary>
+              <div id="builtinDetectorsList" class="detector-grid"></div>
+            </details>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

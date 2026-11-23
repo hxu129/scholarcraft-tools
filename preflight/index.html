@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PaperPreflight Pro — Double-Blind &amp; LaTeX Preflight Auditor</title>
+  <link rel="icon" type="image/png" href="./icons/icon48.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Aviation/Editorial Instrument Bar -->
+    <header class="topbar">
+      <div class="brand">
+        <img src="./icons/icon48.png" alt="PaperPreflight Pro" class="brand-icon" width="32" height="32" />
+        <div class="brand-text">
+          <div class="brand-title-row">
+            <h1 class="brand-name">PaperPreflight Pro</h1>
+            <span class="version-tag">v1.0</span>
+          </div>
+          <p class="brand-subtitle" data-i18n="brandSubtitle">Double-Blind Anonymization &amp; LaTeX Preflight</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <span class="privacy-badge" title="100% client-side offline processing">
+          <span class="privacy-dot" aria-hidden="true"></span>
+          <span data-i18n="privacyPill">100% Local · Zero Upload</span>
+        </span>
+        <button type="button" id="btnLoadDemo" class="btn btn-demo" data-i18n="loadDemo">Load NeurIPS Demo</button>
+        <button type="button" id="btnLangToggle" class="btn btn-ghost" aria-label="Switch Language">中文 / EN</button>
+        <button type="button" id="btnLicenseOpen" class="btn btn-pro-pill">
+          <span id="licenseStatusText" data-i18n="unlockPro">Activate Pro</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Preflight Status Banner -->
+    <section id="statusBanner" class="status-banner status-idle" aria-live="polite">
+      <div class="status-banner-main">
+        <div class="status-beacon" id="statusBeacon" aria-hidden="true"></div>
+        <div class="status-copy">
+          <div class="status-title-row">
+            <h2 id="statusTitle" data-i18n="bannerIdleTitle">READY FOR PREFLIGHT CHECK</h2>
+            <span id="demoModeBadge" class="badge badge-demo hidden" data-i18n="demoBadge">DEMO MODE</span>
+          </div>
+          <p id="statusDesc" data-i18n="bannerIdleDesc">Drop .tex, .bib, and compiled .pdf files below — everything runs strictly inside your browser with zero network transmission.</p>
+        </div>
+      </div>
+
+      <div class="telemetry-strip">
+        <div class="telemetry-card telemetry-critical">
+          <div class="telemetry-value" id="statCritical">0</div>
+          <div class="telemetry-label" data-i18n="statCritical">Critical Leaks</div>
+        </div>
+        <div class="telemetry-card telemetry-high">
+          <div class="telemetry-value" id="statHigh">0</div>
+          <div class="telemetry-label" data-i18n="statHigh">Structural / High</div>
+        </div>
+        <div class="telemetry-card telemetry-medium">
+          <div class="telemetry-value" id="statMedium">0</div>
+          <div class="telemetry-label" data-i18n="statMedium">Warnings / Medium</div>
+        </div>
+        <div class="telemetry-card telemetry-scope">
+          <div class="telemetry-value" id="statScope">0 / 0</div>
+          <div class="telemetry-label" data-i18n="statScope">Files / Lines</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Free Tier Limit Banner (hidden unless custom upload hits Free limits) -->
+    <div id="freeLimitNotice" class="free-limit-notice hidden">
+      <p id="freeLimitText" data-i18n="freeLimitBanner"></p>
+      <button type="button" id="btnBannerUpgrade" class="btn btn-primary btn-sm" data-i18n="upgradeNow">Unlock Pro</button>
+    </div>
+
+    <!-- Main Two-Column Workspace -->
+    <main class="workspace-grid">
+      <!-- Left Rail: Files, Blocklist, Venue, Export Actions -->
+      <aside class="control-rail">
+        <!-- Multi-File Dropzone -->
+        <section class="panel">
+          <div id="dropZone" class="dropzone" tabindex="0" role="button" aria-label="Drop manuscript files">
+            <div class="dropzone-glyph" aria-hidden="true">⬆</div>
+            <div class="dropzone-title" data-i18n="dropTitle">Drop .tex, .bib, and .pdf files here</div>
+            <div class="dropzone-sub" data-i18n="dropSub">Confidential unpublished manuscripts never leave your device.</div>
+            <div class="dropzone-buttons">
+              <button type="button" id="btnChooseFiles" class="btn btn-primary btn-sm" data-i18n="btnChooseFiles">Choose Files</button>
+              <button type="button" id="btnChooseFolder" class="btn btn-secondary btn-sm" data-i18n="btnChooseFolder">Upload Project Folder</button>
+              <button type="button" id="btnPasteOpen" class="btn btn-ghost btn-sm" data-i18n="btnPasteTex">Paste Snippet</button>
+            </div>
+            <input type="file" id="fileInput" class="hidden" multiple accept=".tex,.ltx,.bib,.pdf,.sty,.cls,.txt" />
+            <input type="file" id="folderInput" class="hidden" webkitdirectory directory multiple />
+          </div>
+
+          <div class="file-list-header">
+            <span class="section-mini-label">WORKSPACE FILES (<span id="fileCountLabel">0</span>)</span>
+            <button type="button" id="btnClearFiles" class="btn-link-danger" data-i18n="btnClearFiles">Clear All</button>
+          </div>
+          <ul id="fileList" class="file-list"></ul>
+        </section>
+
+        <!-- Custom Blocklist Tags -->
+        <section class="panel">
+          <h3 class="panel-heading" data-i18n="blocklistTitle">Custom Identity Blocklist</h3>
+          <p class="panel-help" data-i18n="blocklistHelp">Add author names, lab, institution, GitHub handle, or grant IDs (press Enter or comma).</p>
+          <div class="blocklist-input-row">
+            <input type="text" id="blocklistInput" class="text-input" data-i18n-placeholder="blocklistPlaceholder" placeholder="e.g. Alice Chen, Stanford AI Lab, NSF-2418902..." />
+            <button type="button" id="btnAddBlocklist" class="btn btn-secondary btn-sm" data-i18n="addTermBtn">Add</button>
+          </div>
+          <div id="blocklistChips" class="chip-container"></div>
+        </section>
+
+        <!-- Venue & Action Controls -->
+        <section class="panel">
+          <label for="venueSelect" class="panel-heading block-label" data-i18n="venueLabel">Target Venue Profile</label>
+          <select id="venueSelect" class="select-input"></select>
+
+          <div class="action-stack">
+            <button type="button" id="btnRunAudit" class="btn btn-primary btn-block" data-i18n="btnRunAudit">Run Preflight Audit</button>
+            <button type="button" id="btnExportZip" class="btn btn-emerald btn-block">
+              <span data-i18n="btnExportZip">Export Sanitized ZIP</span>
+              <span class="pro-mini-tag" data-i18n="proOnlyTag">PRO</span>
+            </button>
+            <div class="export-row">
+              <button type="button" id="btnExportHtml" class="btn btn-secondary btn-sm flex-1" data-i18n="btnExportHtml">Export HTML Report</button>
+              <button type="button" id="btnExportMd" class="btn btn-secondary btn-sm flex-1" data-i18n="btnExportMd">Export MD Report</button>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <!-- Right Deck: Inspection Tabs & Issue List -->
+      <section class="inspection-deck">
+        <div class="deck-tabs" role="tablist">
+          <button type="button" class="deck-tab active" data-tab="findings" role="tab" aria-selected="true">
+            <span data-i18n="tabFindings">Findings</span>
+            <span class="tab-count" id="tabFindingsCount">0</span>
+          </button>
+          <button type="button" class="deck-tab" data-tab="pdf" role="tab" aria-selected="false">
+            <span data-i18n="tabPdf">PDF Inspector</span>
+            <span class="tab-count" id="tabPdfCount">0</span>
+          </button>
+          <button type="button" class="deck-tab" data-tab="sanitizer" role="tab" aria-selected="false">
+            <span data-i18n="tabSanitizer">Sanitizer Preview</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: Findings -->
+        <div id="tabPanelFindings" class="deck-panel">
+          <div class="filter-bar">
+            <div class="severity-pills" id="severityPills">
+              <button type="button" class="pill active" data-sev="all" data-i18n="filterAll">All</button>
+              <button type="button" class="pill pill-critical" data-sev="critical" data-i18n="filterCritical">Critical</button>
+              <button type="button" class="pill pill-high" data-sev="high" data-i18n="filterHigh">High</button>
+              <button type="button" class="pill pill-medium" data-sev="medium" data-i18n="filterMedium">Medium</button>
+              <button type="button" class="pill pill-low" data-sev="low" data-i18n="filterLow">Low</button>
+            </div>
+            <div class="filter-controls">
+              <select id="categoryFilter" class="select-input select-sm">
+                <option value="all" data-i18n="catAll">All Categories</option>
+                <option value="anonymization" data-i18n="catAnon">Anonymization</option>
+                <option value="structure" data-i18n="catStruct">LaTeX Structure</option>
+                <option value="pdf" data-i18n="catPdf">PDF Metadata</option>
+                <option value="hygiene" data-i18n="catHygiene">Prose Hygiene</option>
+              </select>
+              <input type="search" id="searchFilter" class="text-input input-sm" data-i18n-placeholder="searchPlaceholder" placeholder="Filter by filename, rule ID, or matched text..." />
+            </div>
+          </div>
+
+          <div id="findingsList" class="findings-list"></div>
+        </div>
+
+        <!-- TAB 2: PDF Metadata & Link Inspector -->
+        <div id="tabPanelPdf" class="deck-panel hidden">
+          <div id="pdfInspectorContent"></div>
+        </div>
+
+        <!-- TAB 3: Sanitizer Preview -->
+        <div id="tabPanelSanitizer" class="deck-panel hidden">
+          <div id="sanitizerContent"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Paste Snippet Modal -->
+  <div id="pasteModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="pasteModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="pasteModalTitle" data-i18n="pasteModalTitle">Paste LaTeX / BibTeX Snippet</h3>
+        <button type="button" class="modal-close" id="btnPasteClose" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <label class="field-label" for="pasteFilename" data-i18n="pasteFilenameLabel">Filename</label>
+        <input type="text" id="pasteFilename" class="text-input" value="main.tex" />
+        <label class="field-label" for="pasteContent" data-i18n="pasteContentLabel">Source Content</label>
+        <textarea id="pasteContent" class="code-textarea" rows="12" placeholder="\documentclass{article}..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btnPasteCancel" class="btn btn-ghost" data-i18n="cancelBtn">Cancel</button>
+        <button type="button" id="btnPasteConfirm" class="btn btn-primary" data-i18n="pasteAddBtn">Add to Preflight Workspace</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- License Activation Modal -->
+  <div id="licenseModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="licenseModalTitle">
+    <div class="modal-card modal-card-wide">
+      <div class="modal-header">
+        <h3 id="licenseModalTitle" data-i18n="licenseModalTitle">Activate PaperPreflight Pro</h3>
+        <button type="button" class="modal-close" id="btnLicenseClose" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc" data-i18n="licenseModalDesc">Enter your offline ECDSA signed key (PRE1....) or storefront license key. Verification runs locally.</p>
+
+        <div id="licenseActiveBox" class="license-active-box hidden">
+          <div class="license-active-info">
+            <strong data-i18n="licenseActiveMsg">Pro License Active</strong>
+            <div id="licenseActiveMeta" class="license-meta"></div>
+          </div>
+          <button type="button" id="btnLicenseDeactivate" class="btn btn-danger-outline btn-sm" data-i18n="licenseDeactivateBtn">Deactivate License</button>
+        </div>
+
+        <div class="license-form-row">
+          <input type="text" id="licenseKeyInput" class="text-input mono-input" data-i18n-placeholder="licenseInputPlaceholder" placeholder="PRE1.xxxxx.xxxxx" autocomplete="off" spellcheck="false" />
+          <button type="button" id="btnLicenseVerify" class="btn btn-primary" data-i18n="licenseVerifyBtn">Verify &amp; Activate</button>
+        </div>
+        <div id="licenseErrorMsg" class="form-error hidden"></div>
+
+        <div class="buy-row">
+          <a id="linkBuyGumroad" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" data-i18n="licenseBuyGumroad">Buy on Gumroad ($15)</a>
+          <a id="linkBuyMbd" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" data-i18n="licenseBuyMbd">国内面包多购买 (¥39)</a>
+        </div>
+
+        <div class="comparison-wrap">
+          <h4 class="comparison-title" data-i18n="licenseFreeVsProTitle">Free vs Pro</h4>
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th data-i18n="freeCol">Free</th>
+                <th data-i18n="proCol">Pro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td data-i18n="featMultiFile">Multi-file LaTeX project &amp; folder scanning</td><td>1 file</td><td>✓ Unlimited</td></tr>
+              <tr><td data-i18n="featUnlimitedLines">Unlimited lines (Free: 200 lines / 1 file)</td><td>200 lines</td><td>✓ Unlimited</td></tr>
+              <tr><td data-i18n="featPdfInspect">Binary PDF Info/XMP/URI leak inspector</td><td>✓</td><td>✓</td></tr>
+              <tr><td data-i18n="featZipSanitize">1-click Sanitized submission-clean.zip + pruned .bib</td><td>Preview</td><td>✓ Export</td></tr>
+              <tr><td data-i18n="featReportExport">Printable HTML &amp; Markdown Preflight Audit Reports</td><td>—</td><td>✓ Export</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

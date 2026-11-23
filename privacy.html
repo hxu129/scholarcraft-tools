@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — ScholarCraft Tools</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./index.html">
+        <span class="brand-mark">SC</span>
+        <span>ScholarCraft Tools</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="./index.html#products">Products</a>
+        <a href="./terms.html">Terms</a>
+        <a href="./privacy.html">Privacy</a>
+        <a href="./refund.html">Refunds</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="legal-wrap">
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: November 23, 2026</p>
+
+      <p><strong>ScholarCraft Tools</strong> builds local-first software. We do not operate user-tracking backends, sell personal data, or collect analytics telemetry from our browser extensions or Python templates.</p>
+
+      <h2>1. Data Handling by Product</h2>
+      <ul>
+        <li><strong>SciPlot Studio</strong>: Runs 100% offline inside your local Python environment. Zero network requests are made by any template script.</li>
+        <li><strong>CiteCheck Pro</strong>: Parses your <code>.bib</code> files and plain-text references locally inside your browser. To verify publication records, the browser sends only bibliographic metadata queries (title, DOI, or arXiv ID) directly to public scholarly databases (OpenAlex and Crossref). We never receive, inspect, or store your manuscript text or bibliography.</li>
+        <li><strong>CleanClip MD Pro</strong>: Extracts web content, converts LaTeX equations, counts tokens, and builds Markdown / ZIP archives strictly locally inside Chrome. If you voluntarily enable the optional BYOK (Bring Your Own Key) summary feature, your API key is stored solely in <code>chrome.storage.local</code> and requests are sent directly from your browser to the AI API endpoint you configure.</li>
+        <li><strong>TableForge Pro, PaperPreflight Pro &amp; PromptShield Pro</strong>: Execute 100% locally in your browser or Python environment. Your CSV datasets, unpublished manuscripts, compiled PDFs, source code, and redacted secrets/PII never leave your device.</li>
+      </ul>
+
+      <h2>2. License Verification</h2>
+      <p>Offline signed activation keys are verified locally in your browser via WebCrypto with zero network calls. If you enter an online merchant license key (e.g., Creem, Gumroad, or Lemon Squeezy), the extension sends only the license key string directly to that merchant's official license verification endpoint to confirm activation status.</p>
+
+      <h2>3. Payment &amp; Order Information</h2>
+      <p>Payments are processed securely by our Merchant of Record partners (such as Creem or Gumroad). We do not collect or store credit card numbers or banking credentials. We receive only standard order metadata (buyer email, order ID, purchase date) necessary for license support and refund resolution.</p>
+
+      <h2>4. Website Hosting &amp; Contact</h2>
+      <p>This static website uses no tracking cookies or third-party advertising scripts. For privacy inquiries or data deletion requests regarding support emails, contact <a href="mailto:hxucreativity28@gmail.com">hxucreativity28@gmail.com</a>.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>&copy; 2026 ScholarCraft Tools. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="./index.html">Home</a>
+        <a href="./terms.html">Terms of Service</a>
+        <a href="./refund.html">Refund Policy</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

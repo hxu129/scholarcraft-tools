@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CiteCheck Pro — 论文参考文献防幻觉与撤稿体检</title>
+  <link rel="icon" type="image/png" href="./icons/icon48.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Editorial Header -->
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-icon" src="./icons/icon48.png" alt="CiteCheck Pro" width="32" height="32" />
+        <div class="brand-text">
+          <div class="brand-row">
+            <h1 class="brand-title">CiteCheck Pro</h1>
+            <span id="tierBadge" class="tier-badge tier-free">FREE</span>
+          </div>
+          <p id="appTagline" class="brand-tagline"></p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="licenseBtn" type="button" class="btn btn-outline btn-sm"></button>
+        <button id="langBtn" type="button" class="btn btn-ghost btn-sm" aria-label="Switch Language">EN</button>
+      </div>
+    </header>
+
+    <!-- Main Workspace (1-col on Side Panel, 2-col on Desktop) -->
+    <main class="workspace">
+      <!-- Left / Top Input Panel -->
+      <section class="panel input-panel" id="dropZone">
+        <div class="drop-overlay" id="dropOverlay" aria-hidden="true">
+          <div class="drop-overlay-box" id="dropHint"></div>
+        </div>
+
+        <div class="panel-head">
+          <h2 id="inputTitle" class="panel-title"></h2>
+          <select id="modeSelect" class="mode-select" aria-label="Input format">
+            <option value="auto" id="optAuto"></option>
+            <option value="bibtex" id="optBibtex"></option>
+            <option value="plaintext" id="optPlaintext"></option>
+          </select>
+        </div>
+
+        <div class="quick-actions">
+          <button id="demoBtn" type="button" class="btn btn-soft btn-sm"></button>
+          <button id="overleafBtn" type="button" class="btn btn-soft btn-sm hidden"></button>
+          <button id="uploadBtn" type="button" class="btn btn-outline btn-sm"></button>
+          <input id="fileInput" type="file" accept=".bib,.txt,.tex,.md" class="hidden" />
+          <button id="clearBtn" type="button" class="btn btn-ghost btn-sm"></button>
+        </div>
+
+        <textarea
+          id="refInput"
+          class="ref-textarea"
+          rows="12"
+          spellcheck="false"
+        ></textarea>
+
+        <div class="input-footer">
+          <span id="detectedMeta" class="detected-meta"></span>
+          <div class="run-controls">
+            <button id="cancelBtn" type="button" class="btn btn-danger-outline hidden"></button>
+            <button id="auditBtn" type="button" class="btn btn-primary"></button>
+          </div>
+        </div>
+
+        <!-- Live Progress Bar -->
+        <div id="progressWrap" class="progress-wrap hidden">
+          <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+          <div id="progressText" class="progress-text"></div>
+        </div>
+
+        <!-- Free Tier Limit Banner -->
+        <div id="freeLimitBanner" class="notice-banner hidden">
+          <div class="notice-copy">
+            <strong id="freeLimitTitle"></strong>
+            <p id="freeLimitBody"></p>
+          </div>
+          <button id="unlockFromBannerBtn" type="button" class="btn btn-accent btn-sm"></button>
+        </div>
+
+        <p id="privacyNote" class="privacy-note"></p>
+      </section>
+
+      <!-- Right / Bottom Audit Results Panel -->
+      <section class="panel results-panel">
+        <!-- Summary Filter Pills -->
+        <div id="summaryBar" class="summary-bar hidden">
+          <div id="statPills" class="stat-pills" role="tablist"></div>
+          <div class="results-tools">
+            <input id="searchInput" type="search" class="search-input" />
+          </div>
+        </div>
+
+        <!-- Export Strip -->
+        <div id="exportBar" class="export-bar hidden">
+          <span id="exportTitle" class="export-label"></span>
+          <div class="export-buttons">
+            <button id="exportBibBtn" type="button" class="btn btn-outline btn-xs"></button>
+            <button id="exportMdBtn" type="button" class="btn btn-outline btn-xs"></button>
+            <button id="exportCsvBtn" type="button" class="btn btn-outline btn-xs"></button>
+            <button id="exportHtmlBtn" type="button" class="btn btn-outline btn-xs"></button>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+          <div class="empty-emblem" aria-hidden="true">✓</div>
+          <h3 id="emptyResultsTitle"></h3>
+          <p id="emptyResultsDesc"></p>
+        </div>
+
+        <!-- Result Cards Container -->
+        <div id="resultsList" class="results-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Pro License Modal -->
+  <div id="licenseModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalTitle" class="modal-title"></h2>
+          <p id="modalSubtitle" class="modal-subtitle"></p>
+        </div>
+        <button id="closeModalBtn" type="button" class="icon-close" aria-label="Close">&times;</button>
+      </div>
+
+      <div id="licenseActiveBox" class="license-active-box hidden">
+        <div id="licenseActiveText" class="license-active-text"></div>
+        <button id="deactivateBtn" type="button" class="btn btn-danger-outline btn-xs"></button>
+      </div>
+
+      <div class="tier-grid">
+        <div class="tier-card">
+          <h3 id="tierFreeTitle"></h3>
+          <ul id="tierFreeList"></ul>
+        </div>
+        <div class="tier-card tier-card-pro">
+          <h3 id="tierProTitle"></h3>
+          <ul id="tierProList"></ul>
+        </div>
+      </div>
+
+      <div class="buy-section">
+        <div id="buyTitle" class="section-label"></div>
+        <div class="buy-links">
+          <a id="buyMianbaoduo" class="btn btn-accent btn-sm" target="_blank" rel="noopener noreferrer"></a>
+          <a id="buyGumroad" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer"></a>
+          <a id="buyLemon" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer"></a>
+        </div>
+      </div>
+
+      <form id="licenseForm" class="activate-section">
+        <label for="licenseKeyInput" id="activateLabel" class="section-label"></label>
+        <div class="activate-row">
+          <input id="licenseKeyInput" type="text" class="key-input" autocomplete="off" spellcheck="false" />
+          <button id="activateBtn" type="submit" class="btn btn-primary btn-sm"></button>
+        </div>
+        <div id="licenseError" class="form-error hidden"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

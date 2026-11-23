@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SciPlot Studio — 30 Publication-Grade Scientific Figure Templates</title>
+<style>
+  :root {
+    --bg: #f4f6fa;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --muted: #526071;
+    --border: #dce3ec;
+    --navy: #0f172a;
+    --accent: #3b4992;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #fff;
+    padding: 36px 28px 28px;
+    border-bottom: 4px solid #e64b35;
+  }
+  .wrap { max-width: 1440px; margin: 0 auto; }
+  .hero-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 18px; }
+  h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: -0.02em; }
+  .sub { margin: 0; color: #cbd5e1; font-size: 14.5px; }
+  .lang-switch {
+    display: inline-flex;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 4px;
+  }
+  .lang-btn {
+    border: none; background: transparent; color: #cbd5e1;
+    padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .lang-btn.active { background: #ffffff; color: #0f172a; }
+  .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .badge {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.16);
+    padding: 4px 11px; border-radius: 999px; font-size: 12.5px; color: #e2e8f0;
+  }
+  .toolbar {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(244,246,250,0.94); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+  }
+  .toolbar-inner { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .filter-btn {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+    padding: 7px 13px; border-radius: 999px; cursor: pointer; font-size: 12.5px; font-weight: 600;
+    transition: all 0.15s ease;
+  }
+  .filter-btn:hover { border-color: #94a3b8; }
+  .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .search-box {
+    padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border);
+    background: #fff; min-width: 240px; font-size: 13.5px; outline: none;
+  }
+  .search-box:focus { border-color: var(--accent); }
+  main { padding: 26px 28px 60px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+    gap: 22px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08); }
+  .card-img-wrap {
+    background: #fff; padding: 14px; border-bottom: 1px solid #eef2f6;
+    height: 270px; display: flex; align-items: center; justify-content: center; cursor: zoom-in;
+  }
+  .card-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .card-body { padding: 15px 17px 17px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-head { display: flex; align-items: center; gap: 9px; }
+  .num-pill {
+    color: #fff; font-weight: 700; font-size: 12px;
+    padding: 2px 8px; border-radius: 6px; flex-shrink: 0;
+  }
+  .card-title { font-size: 15.5px; font-weight: 700; margin: 0; }
+  .card-sub { font-size: 13px; color: var(--muted); margin: 0; }
+  .card-desc { font-size: 12.8px; color: #334155; margin: 2px 0 4px; }
+  .meta-row { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .chip {
+    background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px;
+    padding: 2px 7px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11.5px; color: #1e293b;
+  }
+  .cmd-box {
+    margin-top: auto; padding-top: 8px; display: flex; gap: 8px; align-items: center;
+  }
+  .cmd-code {
+    flex: 1; background: #0f172a; color: #e2e8f0; padding: 7px 10px; border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .btn-copy, .btn-pdf {
+    border: 1px solid var(--border); background: #fff; color: var(--ink);
+    padding: 7px 11px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn-copy:hover, .btn-pdf:hover { background: #f8fafc; border-color: #94a3b8; }
+  .btn-copy.copied { background: #059669; color: #fff; border-color: #059669; }
+
+  /* Modal lightbox */
+  .modal {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.78);
+    display: none; align-items: center; justify-content: center; padding: 24px; z-index: 50;
+  }
+  .modal.open { display: flex; }
+  .modal-card {
+    background: #fff; border-radius: 16px; max-width: 1120px; width: 100%;
+    max-height: 92vh; overflow: auto; padding: 22px 24px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .modal-close {
+    border: none; background: #f1f5f9; width: 34px; height: 34px; border-radius: 8px;
+    font-size: 18px; cursor: pointer; font-weight: 700;
+  }
+  .modal-img { width: 100%; max-height: 62vh; object-fit: contain; border: 1px solid #eef2f6; border-radius: 10px; background: #fff; padding: 10px; }
+  .modal-meta { margin-top: 14px; display: grid; gap: 8px; font-size: 13px; }
+  .lang-en-only .zh-el { display: none; }
+  .lang-zh-only .en-el { display: none; }
+  .card-title-zh-only { display: none; }
+  .lang-zh-only .card-title-zh-only { display: block; }
+  .lang-zh-only .card-sub-zh { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <h1>SciPlot Studio</h1>
+        <p class="sub zh-el">30 套 Nature / Science / Cell / ICML 顶刊级科研绘图 Python 一键出图模板包</p>
+        <p class="sub en-el">30 Publication-Grade Scientific Figure Templates in Pure Python (Matplotlib) · 300 DPI PNG + Get PDF + Code ($19)</p>
+      </div>
+      <div class="lang-switch" role="group" aria-label="Language switch">
+        <button class="lang-btn active" data-lang="both">双语 / Both</button>
+        <button class="lang-btn" data-lang="zh">中文</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge">30 Standalone Templates</span>
+      <span class="badge">6 Colorblind-Safe Palettes</span>
+      <span class="badge">300 DPI PNG + FontType 42 Editable PDF</span>
+      <span class="badge">Zero Torch / Paid Dependencies</span>
+      <span class="badge">Offline Browser Gallery</span>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap toolbar-inner">
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-cat="all">All / 全部 (30)</button><button class="filter-btn" data-cat="cat1_stats" style="--accent:#E64B35">01 · 统计分布与显著性对比 / Statistical Distributions (5)</button><button class="filter-btn" data-cat="cat2_ml_eval" style="--accent:#3B4992">02 · 机器学习与顶会消融评测 / ML / AI Model Evaluation (5)</button><button class="filter-btn" data-cat="cat3_corr_dim" style="--accent:#00A087">03 · 相关性、热图与高维降维 / Correlations, Matrices (5)</button><button class="filter-btn" data-cat="cat4_timeseries" style="--accent:#00468B">04 · 时间序列与信号分析 / Time Series, Signals (5)</button><button class="filter-btn" data-cat="cat5_proportions" style="--accent:#D95F02">05 · 比例、排序与流向对比 / Proportions, Rankings (5)</button><button class="filter-btn" data-cat="cat6_multipanel" style="--accent:#2A3F7F">06 · 顶刊多子图主图拼装模板 / Multi-Panel Paper Figures (5)</button>
+    </div>
+    <input type="search" id="search" class="search-box" placeholder="Search templates / 搜索模板、CSV 字段..." />
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <div class="grid" id="grid"></div>
+  </div>
+</main>
+
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <h2 id="m-title" style="margin:0;font-size:19px;"></h2>
+        <div id="m-sub" style="font-size:13.5px;color:#526071;"></div>
+      </div>
+      <button class="modal-close" id="m-close" aria-label="Close">×</button>
+    </div>
+    <img id="m-img" class="modal-img" alt="Preview" />
+    <div class="modal-meta" id="m-meta"></div>
+  </div>
+</div>
+
+<script>
+const ITEMS = [{"id": "01", "cat": "cat1_stats", "stem": "01_raincloud_plot", "script": "templates/01_raincloud_plot.py", "cmd": "python3 templates/01_raincloud_plot.py", "png": "outputs/01_raincloud_plot.png", "pdf": "outputs/01_raincloud_plot.pdf", "csv": "data/01_raincloud.csv", "cols": ["group", "value"], "palette": "nature_npg", "en": "Raincloud Distribution Plot", "zh": "云雨图（半小提琴 + 箱线 + 散点 + 显著性）", "desc_en": "Half-violin KDE, compact IQR box, jittered raw points, and Welch t-test brackets.", "desc_zh": "同时呈现密度分布、中位数/四分位距、原始样本点与自动 Welch t 检验显著性支架。"}, {"id": "02", "cat": "cat1_stats", "stem": "02_violin_box_significance", "script": "templates/02_violin_box_significance.py", "cmd": "python3 templates/02_violin_box_significance.py", "png": "outputs/02_violin_box_significance.png", "pdf": "outputs/02_violin_box_significance.pdf", "csv": "data/02_violin_box_significance.csv", "cols": ["condition", "cohort", "score"], "palette": "science_aaas", "en": "Split Violin & Significance", "zh": "分组对称小提琴图与组间检验", "desc_en": "Cohort-split violins across conditions with inner IQR bars, median dots, and p-values.", "desc_zh": "左右对称小提琴对比双队列分布，内置四分位条、中位白点与组间显著性星号。"}, {"id": "03", "cat": "cat1_stats", "stem": "03_paired_slope_chart", "script": "templates/03_paired_slope_chart.py", "cmd": "python3 templates/03_paired_slope_chart.py", "png": "outputs/03_paired_slope_chart.png", "pdf": "outputs/03_paired_slope_chart.pdf", "csv": "data/03_paired_slope.csv", "cols": ["subject_id", "cohort", "pre", "post"], "palette": "lancet", "en": "Paired Before–After Slope", "zh": "配对前后斜率轨迹图", "desc_en": "Individual Pre-to-Post paired trajectories overlaid with bold group mean ± SEM.", "desc_zh": "展示个体前后配对变化轨迹并叠加组均值 ± SEM 粗线与配对 t 检验统计盒。"}, {"id": "04", "cat": "cat1_stats", "stem": "04_grouped_bar_jitter", "script": "templates/04_grouped_bar_jitter.py", "cmd": "python3 templates/04_grouped_bar_jitter.py", "png": "outputs/04_grouped_bar_jitter.png", "pdf": "outputs/04_grouped_bar_jitter.pdf", "csv": "data/04_grouped_bar_jitter.csv", "cols": ["task", "method", "accuracy"], "palette": "okabe_ito", "en": "Grouped Bar + Individual Dots", "zh": "分组均值柱状图 + 个体散点", "desc_en": "Transparent publication bars with SEM error bars, raw seed scatter, and sig brackets.", "desc_zh": "告别不透明柱状图，叠加随机种子/个体散点、SEM 误差线与跨方法显著性标注。"}, {"id": "05", "cat": "cat1_stats", "stem": "05_forest_effect_size", "script": "templates/05_forest_effect_size.py", "cmd": "python3 templates/05_forest_effect_size.py", "png": "outputs/05_forest_effect_size.png", "pdf": "outputs/05_forest_effect_size.pdf", "csv": "data/05_forest_effect_size.csv", "cols": ["study", "subgroup", "effect", "ci_low", "ci_high", "weight", "p_value", "is_summary"], "palette": "cell_muted", "en": "Meta-Analysis Forest Plot", "zh": "Meta 分析效应量森林图", "desc_en": "Subgroup-colored Hedges' g with 95% CIs, weight-scaled squares, and pooled diamond.", "desc_zh": "含亚组配色、权重缩放方块、95% 置信区间、零效应虚线、合并菱形与右侧数值表。"}, {"id": "06", "cat": "cat2_ml_eval", "stem": "06_ablation_delta_bars", "script": "templates/06_ablation_delta_bars.py", "cmd": "python3 templates/06_ablation_delta_bars.py", "png": "outputs/06_ablation_delta_bars.png", "pdf": "outputs/06_ablation_delta_bars.pdf", "csv": "data/06_ablation_delta.csv", "cols": ["variant", "score", "std", "is_full"], "palette": "nature_npg", "en": "Ablation Study Delta Bars", "zh": "消融实验 Δ 降幅条形图", "desc_en": "Full model reference line with explicit -Δ performance drop callouts per removed module.", "desc_zh": "高亮完整模型基线并直观标注移除各模块后的精确 -Δ 性能变化与标准差误差线。"}, {"id": "07", "cat": "cat2_ml_eval", "stem": "07_multimodel_roc_pr", "script": "templates/07_multimodel_roc_pr.py", "cmd": "python3 templates/07_multimodel_roc_pr.py", "png": "outputs/07_multimodel_roc_pr.png", "pdf": "outputs/07_multimodel_roc_pr.pdf", "csv": "data/07_multimodel_roc_pr.csv", "cols": ["y_true", "Ours (SciNet)", "Transformer", "XGBoost", "Logistic Reg."], "palette": "science_aaas", "en": "Multi-Model ROC & PR Curves", "zh": "多模型 ROC & PR 曲线（含 Bootstrap CI）", "desc_en": "Side-by-side ROC & Precision–Recall curves with 95% bootstrap bands and AUC/AP table.", "desc_zh": "纯 NumPy 从预测概率直出 ROC/PR 双联图，自带 95% Bootstrap 置信带与 AUC/AP 汇总。"}, {"id": "08", "cat": "cat2_ml_eval", "stem": "08_scaling_law_ci_curves", "script": "templates/08_scaling_law_ci_curves.py", "cmd": "python3 templates/08_scaling_law_ci_curves.py", "png": "outputs/08_scaling_law_ci_curves.png", "pdf": "outputs/08_scaling_law_ci_curves.pdf", "csv": "data/08_scaling_law.csv", "cols": ["compute_flops", "model_family", "seed", "val_loss"], "palette": "okabe_ito", "en": "Log-Log Scaling Law Curves", "zh": "双对数 Scaling Law 幂律拟合图", "desc_en": "Compute-vs-loss scaling with multi-seed SD ribbons, fitted power-law α, and efficiency note.", "desc_zh": "双对数算力扩展曲线，自动拟合幂律指数 α 并绘制多种子 ±1 SD 阴影与算力节省标注。"}, {"id": "09", "cat": "cat2_ml_eval", "stem": "09_confusion_matrix_margins", "script": "templates/09_confusion_matrix_margins.py", "cmd": "python3 templates/09_confusion_matrix_margins.py", "png": "outputs/09_confusion_matrix_margins.png", "pdf": "outputs/09_confusion_matrix_margins.pdf", "csv": "data/09_confusion_matrix.csv", "cols": ["true_label", "pred_label"], "palette": "lancet", "en": "Confusion Matrix + Marginals", "zh": "混淆矩阵 + 精准率/召回率边际柱图", "desc_en": "Row-normalized heatmap (% + counts) paired with top precision and right recall bars.", "desc_zh": "矩阵格内同时标注召回率百分比与原始计数，顶部与右侧无缝拼接 Precision/Recall 边际条。"}, {"id": "10", "cat": "cat2_ml_eval", "stem": "10_pareto_frontier_bubble", "script": "templates/10_pareto_frontier_bubble.py", "cmd": "python3 templates/10_pareto_frontier_bubble.py", "png": "outputs/10_pareto_frontier_bubble.png", "pdf": "outputs/10_pareto_frontier_bubble.pdf", "csv": "data/10_pareto_frontier.csv", "cols": ["model", "family", "latency_ms", "accuracy", "memory_gb", "is_ours"], "palette": "nature_npg", "en": "Pareto Frontier Bubble Plot", "zh": "精度–延迟帕累托前沿气泡图", "desc_en": "Accuracy vs latency Pareto envelope with bubble area encoding VRAM and clean callouts.", "desc_zh": "自动计算非支配帕累托前沿折线，气泡面积映射显存开销，零遮挡引线标注代表模型。"}, {"id": "11", "cat": "cat3_corr_dim", "stem": "11_lower_triangle_corr_bubble", "script": "templates/11_lower_triangle_corr_bubble.py", "cmd": "python3 templates/11_lower_triangle_corr_bubble.py", "png": "outputs/11_lower_triangle_corr_bubble.png", "pdf": "outputs/11_lower_triangle_corr_bubble.pdf", "csv": "data/11_corr_matrix.csv", "cols": ["Cortisol", "IL-6", "CRP", "TNF-α", "HRV", "Sleep Eff.", "BDNF", "Theta Pow.", "Working Mem.", "Exec. Ctrl."], "palette": "nature_npg", "en": "Lower-Triangle Corr Bubble", "zh": "下三角相关性气泡矩阵（含星号）", "desc_en": "Lower-triangle Pearson r matrix encoding |r| by circle size, sign by color, and p stars.", "desc_zh": "直接从原始特征表计算 Pearson r 与 p 值，圆大小映射 |r|、红蓝发散色映射正负并标显著星。"}, {"id": "12", "cat": "cat3_corr_dim", "stem": "12_clustered_heatmap_dendrogram", "script": "templates/12_clustered_heatmap_dendrogram.py", "cmd": "python3 templates/12_clustered_heatmap_dendrogram.py", "png": "outputs/12_clustered_heatmap_dendrogram.png", "pdf": "outputs/12_clustered_heatmap_dendrogram.pdf", "csv": "data/12_clustered_heatmap.csv", "cols": ["gene", "Sev_3", "Sev_4", "Mild_3", "Mild_1", "Sev_2", "Ctrl_1", "Ctrl_3", "Ctrl_4", "Sev_5", "Ctrl_2", "Mild_4", "Ctrl_5", "Mild_2", "Sev_1"], "palette": "cell_muted", "en": "Clustered Heatmap + Dendrogram", "zh": "双向层次聚类树状热图（Row Z-Score）", "desc_en": "SciPy Ward hierarchical clustering on rows & columns with cohort annotation strip.", "desc_zh": "SciPy 双向 Ward 层次聚类，含顶部/左侧系统树、样本队列色条与行标准化发散热图。"}, {"id": "13", "cat": "cat3_corr_dim", "stem": "13_volcano_plot_annotated", "script": "templates/13_volcano_plot_annotated.py", "cmd": "python3 templates/13_volcano_plot_annotated.py", "png": "outputs/13_volcano_plot_annotated.png", "pdf": "outputs/13_volcano_plot_annotated.pdf", "csv": "data/13_volcano.csv", "cols": ["gene", "log2_fc", "adj_p_value"], "palette": "nature_npg", "en": "Annotated Volcano Plot", "zh": "差异分析火山图（防重叠智能标注）", "desc_en": "Fold-change & FDR thresholded volcano plot with aligned non-overlapping top-hit callouts.", "desc_zh": "清晰划分上调/下调/不显著基因并统计数量，左右轨道自动排布 Top 基因标签零重叠。"}, {"id": "14", "cat": "cat3_corr_dim", "stem": "14_umap_pca_ellipses_margins", "script": "templates/14_umap_pca_ellipses_margins.py", "cmd": "python3 templates/14_umap_pca_ellipses_margins.py", "png": "outputs/14_umap_pca_ellipses_margins.png", "pdf": "outputs/14_umap_pca_ellipses_margins.pdf", "csv": "data/14_umap_embedding.csv", "cols": ["umap1", "umap2", "cluster"], "palette": "okabe_ito", "en": "UMAP/PCA + 95% Ellipses & KDE", "zh": "二维降维散点 + 95% 置信椭圆与边际密度", "desc_en": "2D embedding clusters with analytical 95% covariance ellipses and marginal KDE curves.", "desc_zh": "基于特征值解析绘制各聚类 95% 置信椭圆与质心标记，顶部及右侧附分簇 KDE 密度曲线。"}, {"id": "15", "cat": "cat3_corr_dim", "stem": "15_radar_multimetric_compare", "script": "templates/15_radar_multimetric_compare.py", "cmd": "python3 templates/15_radar_multimetric_compare.py", "png": "outputs/15_radar_multimetric_compare.png", "pdf": "outputs/15_radar_multimetric_compare.pdf", "csv": "data/15_radar_metrics.csv", "cols": ["metric", "Ours (SciNet)", "Transformer", "GraphNet", "XGBoost"], "palette": "viridis_pro", "en": "Multi-Metric Radar Profile", "zh": "多维能力雷达对比图", "desc_en": "Clean 6-axis polar comparison of 4 models with custom-aligned non-clipped outer labels.", "desc_zh": "6 维归一化指标多模型综合画像，自定义外圈文字对齐确保永不裁切、视觉克制清爽。"}, {"id": "16", "cat": "cat4_timeseries", "stem": "16_multichannel_event_timeseries", "script": "templates/16_multichannel_event_timeseries.py", "cmd": "python3 templates/16_multichannel_event_timeseries.py", "png": "outputs/16_multichannel_event_timeseries.png", "pdf": "outputs/16_multichannel_event_timeseries.pdf", "csv": "data/16_multichannel_timeseries.csv", "cols": ["time_s", "PFC", "HPC", "V1", "S1", "M1"], "palette": "nature_npg", "en": "Multi-Channel Event Traces", "zh": "多通道堆叠时序波形 + 事件窗与比例尺", "desc_en": "Stacked neural/sensor channels with shaded stimulus windows and L-shaped scale bar.", "desc_zh": "经典神经/传感多道堆叠记录风格，含刺激事件灰底窗、基线参考与右下角 L 型时空比例尺。"}, {"id": "17", "cat": "cat4_timeseries", "stem": "17_rolling_mean_iqr_band", "script": "templates/17_rolling_mean_iqr_band.py", "cmd": "python3 templates/17_rolling_mean_iqr_band.py", "png": "outputs/17_rolling_mean_iqr_band.png", "pdf": "outputs/17_rolling_mean_iqr_band.pdf", "csv": "data/17_rolling_iqr.csv", "cols": ["time_min", "group", "subject_id", "value"], "palette": "lancet", "en": "Median & IQR Trajectory Band", "zh": "多组中位数与 25–75% IQR 置信带时序图", "desc_en": "Robust longitudinal trajectories showing median, 25–75% IQR, 10–90% envelope & onset.", "desc_zh": "稳健展示多组纵向轨迹的中位数、四分位 IQR 阴影带、10–90% 轮廓与干预起始虚线。"}, {"id": "18", "cat": "cat4_timeseries", "stem": "18_dual_axis_inset_zoom", "script": "templates/18_dual_axis_inset_zoom.py", "cmd": "python3 templates/18_dual_axis_inset_zoom.py", "png": "outputs/18_dual_axis_inset_zoom.png", "pdf": "outputs/18_dual_axis_inset_zoom.pdf", "csv": "data/18_dual_axis_inset.csv", "cols": ["epoch", "train_loss", "val_loss", "learning_rate"], "palette": "okabe_ito", "en": "Dual-Y Curve + Inset Magnifier", "zh": "双 Y 轴训练动态 + 局部放大镜插图", "desc_en": "Loss & learning rate dual-Y plot with linked inset zoom box highlighting convergence.", "desc_zh": "左轴损失、右轴余弦学习率配色统一，内嵌局部放大子图及指示连线展示收敛细节。"}, {"id": "19", "cat": "cat4_timeseries", "stem": "19_time_frequency_spectrogram_matrix", "script": "templates/19_time_frequency_spectrogram_matrix.py", "cmd": "python3 templates/19_time_frequency_spectrogram_matrix.py", "png": "outputs/19_time_frequency_spectrogram_matrix.png", "pdf": "outputs/19_time_frequency_spectrogram_matrix.pdf", "csv": "data/19_spectrogram.csv", "cols": ["time_s", "freq_hz", "power_db"], "palette": "science_aaas", "en": "Time–Frequency Spectrogram", "zh": "时频功率谱矩阵 + 等高线与频段标尺", "desc_en": "Baseline-normalized 2D spectral power map with contour lines, onset line, and θ/α/β/γ marks.", "desc_zh": "平滑渲染二维 dB 功率变化热图，叠加显著性等高线、事件起始线与神经节律频段标注。"}, {"id": "20", "cat": "cat4_timeseries", "stem": "20_stacked_area_proportion", "script": "templates/20_stacked_area_proportion.py", "cmd": "python3 templates/20_stacked_area_proportion.py", "png": "outputs/20_stacked_area_proportion.png", "pdf": "outputs/20_stacked_area_proportion.pdf", "csv": "data/20_stacked_area.csv", "cols": ["year", "Classical ML", "CNN / RNN", "Graph NN", "Transformers", "Diffusion"], "palette": "cell_muted", "en": "Smooth 100% Stacked Area", "zh": "平滑 100% 堆叠面积演变图", "desc_en": "Monotone PCHIP-smoothed normalized composition over time with direct right-edge labels.", "desc_zh": "保单调 PCHIP 平滑插值呈现十年结构占比演变，右侧直连品类名称与最新占比无需翻图例。"}, {"id": "21", "cat": "cat5_proportions", "stem": "21_alluvial_sankey_flow", "script": "templates/21_alluvial_sankey_flow.py", "cmd": "python3 templates/21_alluvial_sankey_flow.py", "png": "outputs/21_alluvial_sankey_flow.png", "pdf": "outputs/21_alluvial_sankey_flow.pdf", "csv": "data/21_alluvial_flow.csv", "cols": ["stage1", "stage2", "stage3", "count"], "palette": "nature_npg", "en": "3-Stage Alluvial / Sankey Flow", "zh": "三阶段贝塞尔桑基 / 冲积流向图", "desc_en": "Pure Matplotlib cubic-Bezier transition ribbons across 3 stages with counts & shares.", "desc_zh": "纯 Matplotlib PathPatch 绘制丝滑三阶段贝塞尔流带，自动排序防交叉并标注人数与比例。"}, {"id": "22", "cat": "cat5_proportions", "stem": "22_lollipop_baseline_ranking", "script": "templates/22_lollipop_baseline_ranking.py", "cmd": "python3 templates/22_lollipop_baseline_ranking.py", "png": "outputs/22_lollipop_baseline_ranking.png", "pdf": "outputs/22_lollipop_baseline_ranking.pdf", "csv": "data/22_lollipop_ranking.csv", "cols": ["feature", "delta_pct", "category"], "palette": "okabe_ito", "en": "Diverging Lollipop Ranking", "zh": "正负发散棒棒糖排序图", "desc_en": "Sorted positive/negative baseline impact ranking with dual-color stems and signed values.", "desc_zh": "围绕零基线清晰排序正向收益与负向退化，高对比双色区分方向并在端点直标精确数值。"}, {"id": "23", "cat": "cat5_proportions", "stem": "23_stacked_percent_horizontal", "script": "templates/23_stacked_percent_horizontal.py", "cmd": "python3 templates/23_stacked_percent_horizontal.py", "png": "outputs/23_stacked_percent_horizontal.png", "pdf": "outputs/23_stacked_percent_horizontal.pdf", "csv": "data/23_stacked_percent.csv", "cols": ["item", "Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"], "palette": "lancet", "en": "100% Stacked Likert Bars", "zh": "100% 水平堆叠李克特量表图", "desc_en": "Diverging 5-level horizontal stacked bars with clean internal percentage annotations.", "desc_zh": "发散五级色盲友好配色，水平 100% 堆叠并自动省略过窄文字、顶部清爽单行图例。"}, {"id": "24", "cat": "cat5_proportions", "stem": "24_nested_donut_breakdown", "script": "templates/24_nested_donut_breakdown.py", "cmd": "python3 templates/24_nested_donut_breakdown.py", "png": "outputs/24_nested_donut_breakdown.png", "pdf": "outputs/24_nested_donut_breakdown.pdf", "csv": "data/24_nested_donut.csv", "cols": ["domain", "subdomain", "value"], "palette": "cell_muted", "en": "Hierarchical Nested Donut", "zh": "双层嵌套环形占比图（智能引线）", "desc_en": "Two-ring macro/subdomain composition with tonal shading and left/right callout rails.", "desc_zh": "内环宏观维度 + 外环同色系渐变细分层级，左右垂直轨道引线标注确保外圈文字绝不打架。"}, {"id": "25", "cat": "cat5_proportions", "stem": "25_dumbbell_before_after", "script": "templates/25_dumbbell_before_after.py", "cmd": "python3 templates/25_dumbbell_before_after.py", "png": "outputs/25_dumbbell_before_after.png", "pdf": "outputs/25_dumbbell_before_after.pdf", "csv": "data/25_dumbbell_before_after.csv", "cols": ["benchmark", "baseline", "proposed"], "palette": "science_aaas", "en": "Before–After Dumbbell Plot", "zh": "前后对比哑铃图 + 右列 Δ 增幅徽章", "desc_en": "Baseline vs Proposed comparison across 8 benchmarks with aligned green Δ gain badges.", "desc_zh": "跨 8 项基准直观对比基线与新方法得分差距，右侧独立对齐绿色 Δ 增益徽章列一目了然。"}, {"id": "26", "cat": "cat6_multipanel", "stem": "26_nature_2x2_main_figure", "script": "templates/26_nature_2x2_main_figure.py", "cmd": "python3 templates/26_nature_2x2_main_figure.py", "png": "outputs/26_nature_2x2_main_figure.png", "pdf": "outputs/26_nature_2x2_main_figure.pdf", "csv": "data/26_nature_2x2.csv", "cols": ["subject_id", "group", "time_h", "response", "biomarker_x", "endpoint_score"], "palette": "nature_npg", "en": "Nature 2×2 Composite Figure", "zh": "Nature 双栏 2×2 主图完整拼装模板", "desc_en": "Full 7.2-inch 2×2 study figure (a–d: kinetics, endpoint, regression, responder rate).", "desc_zh": "单份研究 CSV 一键生成 Nature 7.2 英寸双栏 2×2 完整主图，统一配色与粗体小写 a–d 标号。"}, {"id": "27", "cat": "cat6_multipanel", "stem": "27_asymmetric_1plus2_layout", "script": "templates/27_asymmetric_1plus2_layout.py", "cmd": "python3 templates/27_asymmetric_1plus2_layout.py", "png": "outputs/27_asymmetric_1plus2_layout.png", "pdf": "outputs/27_asymmetric_1plus2_layout.pdf", "csv": "data/27_asymmetric_1plus2.csv", "cols": ["step_k", "method", "seed", "accuracy", "ece"], "palette": "okabe_ito", "en": "Asymmetric 1 + 2 GridSpec", "zh": "非对称 1+2 主次多子图布局（GridSpec）", "desc_en": "One wide primary trajectory panel paired with two right-hand stacked quantitative summaries.", "desc_zh": "左侧宽幅主收敛曲线 + 右侧上下双细节指标子图，ICML/Nature 最常用的非对称主图版式。"}, {"id": "28", "cat": "cat6_multipanel", "stem": "28_three_panel_shared_colorbar", "script": "templates/28_three_panel_shared_colorbar.py", "cmd": "python3 templates/28_three_panel_shared_colorbar.py", "png": "outputs/28_three_panel_shared_colorbar.png", "pdf": "outputs/28_three_panel_shared_colorbar.pdf", "csv": "data/28_three_panel_heatmaps.csv", "cols": ["condition", "row_idx", "col_idx", "value"], "palette": "viridis_pro", "en": "3-Panel Shared-Colorbar Map", "zh": "三联对比热图 + 全局共享色标", "desc_en": "Three comparative matrices locked to identical clim with one unified right colorbar.", "desc_zh": "三组条件矩阵严格锁定对称色域范围并共享单一右侧 Colorbar，杜绝跨图色标误导。"}, {"id": "29", "cat": "cat6_multipanel", "stem": "29_joint_scatter_marginal_kde", "script": "templates/29_joint_scatter_marginal_kde.py", "cmd": "python3 templates/29_joint_scatter_marginal_kde.py", "png": "outputs/29_joint_scatter_marginal_kde.png", "pdf": "outputs/29_joint_scatter_marginal_kde.pdf", "csv": "data/29_joint_kde.csv", "cols": ["x_val", "y_val", "group"], "palette": "lancet", "en": "Joint Scatter + Marginal KDE", "zh": "联合回归散点 + 双边际 KDE 分布图", "desc_en": "Bivariate scatter, OLS regression with 95% CI, R²/p stats box, and top/right KDE histograms.", "desc_zh": "回归散点、95% 置信带与 R²/p 统计盒，GridSpec 严丝合缝拼接顶部和右侧直方图与 KDE。"}, {"id": "30", "cat": "cat6_multipanel", "stem": "30_palette_and_style_showcase", "script": "templates/30_palette_and_style_showcase.py", "cmd": "python3 templates/30_palette_and_style_showcase.py", "png": "outputs/30_palette_and_style_showcase.png", "pdf": "outputs/30_palette_and_style_showcase.pdf", "csv": "pubstyle.py (built-in)", "cols": ["(reads PALETTES & JOURNAL_WIDTHS from pubstyle.py)"], "palette": "nature_npg", "en": "Palette & Journal Width Kit", "zh": "6 套色盲友好配色 & 顶刊栏宽速查卡", "desc_en": "Visual cheat sheet of all 6 HEX palettes and Nature/Science/ICML/IEEE width presets.", "desc_zh": "可视化速查全部 6 套顶刊色盲安全配色 HEX 值及 Nature/Science/ICML/IEEE 标准栏宽。"}];
+const CATS = {"cat1_stats": {"id": "cat1_stats", "num": "01", "en": "Statistical Distributions & Comparisons", "zh": "统计分布与显著性对比", "accent": "#E64B35"}, "cat2_ml_eval": {"id": "cat2_ml_eval", "num": "02", "en": "ML / AI Model Evaluation & Ablations", "zh": "机器学习与顶会消融评测", "accent": "#3B4992"}, "cat3_corr_dim": {"id": "cat3_corr_dim", "num": "03", "en": "Correlations, Matrices & High-Dim Data", "zh": "相关性、热图与高维降维", "accent": "#00A087"}, "cat4_timeseries": {"id": "cat4_timeseries", "num": "04", "en": "Time Series, Signals & Neuroscience", "zh": "时间序列与信号分析", "accent": "#00468B"}, "cat5_proportions": {"id": "cat5_proportions", "num": "05", "en": "Proportions, Rankings & Flows", "zh": "比例、排序与流向对比", "accent": "#D95F02"}, "cat6_multipanel": {"id": "cat6_multipanel", "num": "06", "en": "Multi-Panel Paper Figures & Style Kit", "zh": "顶刊多子图主图拼装模板", "accent": "#2A3F7F"}};
+let activeCat = "all";
+let searchQ = "";
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function copyText(text, btn) {
+  const done = () => {
+    const orig = btn.textContent;
+    btn.textContent = "Copied ✓";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove("copied"); }, 1400);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand("copy");
+  document.body.removeChild(ta);
+  cb();
+}
+
+function render() {
+  const grid = document.getElementById("grid");
+  const q = searchQ.trim().toLowerCase();
+  const filtered = ITEMS.filter(it => {
+    if (activeCat !== "all" && it.cat !== activeCat) return false;
+    if (!q) return true;
+    const hay = [it.id, it.en, it.zh, it.desc_en, it.desc_zh, it.script, it.csv, it.palette, ...it.cols].join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+
+  grid.innerHTML = filtered.map(it => {
+    const accent = CATS[it.cat].accent;
+    const colChips = it.cols.slice(0, 6).map(c => `<span class="chip">${escapeHtml(c)}</span>`).join("");
+    const extra = it.cols.length > 6 ? `<span class="chip">+${it.cols.length - 6}</span>` : "";
+    return `
+      <article class="card">
+        <div class="card-img-wrap" data-id="${it.id}">
+          <img src="${it.png}" alt="${escapeHtml(it.en)}" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <span class="num-pill" style="background:${accent}">${it.id}</span>
+            <h3 class="card-title en-el">${escapeHtml(it.en)}</h3>
+            <h3 class="card-title card-title-zh-only">${escapeHtml(it.zh)}</h3>
+          </div>
+          <p class="card-sub zh-el card-sub-zh">${escapeHtml(it.zh)}</p>
+          <p class="card-desc en-el">${escapeHtml(it.desc_en)}</p>
+          <p class="card-desc zh-el">${escapeHtml(it.desc_zh)}</p>
+          <div class="meta-row">
+            <strong>CSV:</strong> <span class="chip">${escapeHtml(it.csv)}</span>
+            <strong>Palette:</strong> <span class="chip">${escapeHtml(it.palette)}</span>
+          </div>
+          <div class="meta-row"><strong>Cols:</strong> ${colChips}${extra}</div>
+          <div class="cmd-box">
+            <code class="cmd-code" title="${escapeHtml(it.cmd)}">${escapeHtml(it.cmd)}</code>
+            <button class="btn-copy" data-cmd="${escapeHtml(it.cmd)}">Copy</button>
+            <a class="btn-pdf" href="${it.pdf}" target="_blank" rel="noopener">PDF</a>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  grid.querySelectorAll(".btn-copy").forEach(btn => {
+    btn.addEventListener("click", () => copyText(btn.dataset.cmd, btn));
+  });
+  grid.querySelectorAll(".card-img-wrap").forEach(el => {
+    el.addEventListener("click", () => openModal(el.dataset.id));
+  });
+}
+
+function openModal(id) {
+  const it = ITEMS.find(x => x.id === id);
+  if (!it) return;
+  document.getElementById("m-title").textContent = `${it.id} · ${it.en}`;
+  document.getElementById("m-sub").textContent = `${it.zh} — ${CATS[it.cat].en}`;
+  document.getElementById("m-img").src = it.png;
+  document.getElementById("m-meta").innerHTML = `
+    <div><strong>Script:</strong> <span class="chip">${escapeHtml(it.script)}</span> &nbsp; <strong>PDF Vector:</strong> <a href="${it.pdf}" target="_blank">${it.pdf}</a></div>
+    <div><strong>CSV Input:</strong> <span class="chip">${escapeHtml(it.csv)}</span></div>
+    <div><strong>Columns:</strong> ${it.cols.map(c => `<span class="chip">${escapeHtml(c)}</span>`).join(" ")}</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+      <code class="cmd-code" style="flex:1">${escapeHtml(it.cmd)}</code>
+      <button class="btn-copy" id="m-copy">Copy Command</button>
+    </div>
+  `;
+  document.getElementById("m-copy").addEventListener("click", function() { copyText(it.cmd, this); });
+  document.getElementById("modal").classList.add("open");
+}
+
+document.getElementById("m-close").addEventListener("click", () => document.getElementById("modal").classList.remove("open"));
+document.getElementById("modal").addEventListener("click", e => { if (e.target.id === "modal") e.currentTarget.classList.remove("open"); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") document.getElementById("modal").classList.remove("open"); });
+
+document.getElementById("filters").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-btn");
+  if (!btn) return;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  activeCat = btn.dataset.cat;
+  render();
+});
+
+document.getElementById("search").addEventListener("input", e => {
+  searchQ = e.target.value;
+  render();
+});
+
+document.querySelectorAll(".lang-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.body.classList.remove("lang-en-only", "lang-zh-only");
+    if (btn.dataset.lang === "en") document.body.classList.add("lang-en-only");
+    if (btn.dataset.lang === "zh") document.body.classList.add("lang-zh-only");
+  });
+});
+
+render();
+</script>
+</body>
+</html>

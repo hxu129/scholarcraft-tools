@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TableForge Pro — 科研论文实验结果一键转顶刊三线表</title>
+  <link rel="icon" type="image/png" href="./icons/icon48.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Editorial Header -->
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-icon" src="./icons/icon48.png" alt="TableForge Pro" width="32" height="32" />
+        <div class="brand-text">
+          <div class="brand-row">
+            <h1 class="brand-title">TableForge Pro</h1>
+            <span id="tierBadge" class="tier-badge tier-free">FREE</span>
+          </div>
+          <p id="appTagline" class="brand-tagline"></p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="licenseBtn" type="button" class="btn btn-outline btn-sm"></button>
+        <button id="langBtn" type="button" class="btn btn-ghost btn-sm" aria-label="Switch Language">EN</button>
+      </div>
+    </header>
+
+    <!-- Main Workspace (2-column split on Desktop, 1-column on Side Panel) -->
+    <main class="workspace">
+      <!-- Left Column: Input + Formatting Controls -->
+      <div class="col-left">
+        <!-- 1. Data Input Panel -->
+        <section class="panel input-panel" id="dropZone">
+          <div class="drop-overlay" id="dropOverlay" aria-hidden="true">
+            <div class="drop-overlay-box" id="dropHint"></div>
+          </div>
+
+          <div class="panel-head">
+            <h2 id="inputTitle" class="panel-title"></h2>
+            <span id="detectedMeta" class="detected-meta"></span>
+          </div>
+
+          <div class="quick-actions">
+            <button id="demoBtn" type="button" class="btn btn-soft btn-sm"></button>
+            <button id="uploadBtn" type="button" class="btn btn-outline btn-sm"></button>
+            <input id="fileInput" type="file" accept=".csv,.tsv,.txt" class="hidden" />
+            <button id="clearBtn" type="button" class="btn btn-ghost btn-sm"></button>
+          </div>
+
+          <textarea
+            id="dataInput"
+            class="data-textarea"
+            rows="9"
+            spellcheck="false"
+          ></textarea>
+
+          <!-- Free Tier Limit Banner -->
+          <div id="freeLimitBanner" class="notice-banner hidden">
+            <div class="notice-copy">
+              <strong id="freeLimitTitle"></strong>
+              <p id="freeLimitBody"></p>
+            </div>
+            <button id="unlockFromBannerBtn" type="button" class="btn btn-accent btn-sm"></button>
+          </div>
+
+          <p id="privacyNote" class="privacy-note"></p>
+        </section>
+
+        <!-- 2. Formatting & Column Direction Controls -->
+        <section class="panel controls-panel">
+          <div class="panel-head">
+            <h2 id="controlsTitle" class="panel-title"></h2>
+          </div>
+
+          <!-- Per-column Interactive Direction Pills -->
+          <div class="control-block">
+            <div id="colDirectionsLabel" class="field-label"></div>
+            <div id="colPills" class="col-pills"></div>
+          </div>
+
+          <!-- Selects Grid -->
+          <div class="controls-grid">
+            <label class="field">
+              <span id="venueLabel" class="field-label"></span>
+              <select id="presetSelect" class="select-input">
+                <option value="neurips">NeurIPS / ICML</option>
+                <option value="nature">Nature 3-Line</option>
+                <option value="ieee">IEEE Two-Column</option>
+                <option value="acl">ACL / EMNLP</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span id="precisionLabel" class="field-label"></span>
+              <select id="precisionSelect" class="select-input">
+                <option value="auto" id="optPrecisionAuto">Auto</option>
+                <option value="0">0 (e.g. 89)</option>
+                <option value="1">1 (e.g. 89.4)</option>
+                <option value="2">2 (e.g. 89.42)</option>
+                <option value="3">3 (e.g. 89.420)</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span class="field-label-row">
+                <span id="baselineLabel" class="field-label"></span>
+                <span id="baselineProTag" class="pro-tag">PRO</span>
+              </span>
+              <select id="baselineSelect" class="select-input"></select>
+            </label>
+
+            <label class="field">
+              <span id="deltaModeLabel" class="field-label">Δ Mode</span>
+              <select id="deltaModeSelect" class="select-input">
+                <option value="abs" id="optDeltaAbs"></option>
+                <option value="pct" id="optDeltaPct"></option>
+              </select>
+            </label>
+          </div>
+
+          <!-- Toggle Chips -->
+          <div class="toggle-strip">
+            <label class="toggle-chip">
+              <input id="chkBold" type="checkbox" checked />
+              <span id="lblBold"></span>
+            </label>
+            <label class="toggle-chip">
+              <input id="chkUnderline" type="checkbox" checked />
+              <span id="lblUnderline"></span>
+            </label>
+            <label class="toggle-chip">
+              <input id="chkArrows" type="checkbox" checked />
+              <span id="lblArrows"></span>
+            </label>
+            <label class="toggle-chip" id="siunitxChip">
+              <input id="chkSiunitx" type="checkbox" />
+              <span id="lblSiunitx"></span>
+              <span id="siunitxProTag" class="pro-tag">PRO</span>
+            </label>
+            <label class="toggle-chip">
+              <input id="chkResizebox" type="checkbox" />
+              <span id="lblResizebox"></span>
+            </label>
+          </div>
+
+          <!-- Caption & Label -->
+          <div class="controls-grid caption-grid">
+            <label class="field field-wide">
+              <span id="captionLabel" class="field-label"></span>
+              <input id="captionInput" type="text" class="text-input" />
+            </label>
+            <label class="field">
+              <span id="labelFieldLabel" class="field-label"></span>
+              <input id="labelInput" type="text" class="text-input mono-input" />
+            </label>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column: Compiled Academic Preview + Export Code Studio -->
+      <div class="col-right">
+        <!-- 3. Live Academic Publication Preview -->
+        <section class="panel preview-panel">
+          <div class="panel-head">
+            <h2 id="previewTitle" class="panel-title"></h2>
+            <span id="previewMeta" class="preview-meta"></span>
+          </div>
+
+          <div class="preview-legend" id="previewLegend">
+            <span class="legend-item"><strong class="legend-best-sample">91.64</strong> <span id="legendBest"></span></span>
+            <span class="legend-item"><u class="legend-second-sample">90.85</u> <span id="legendSecond"></span></span>
+            <span class="legend-item hidden" id="legendBaselineWrap"><span class="legend-base-swatch"></span> <span id="legendBaseline"></span></span>
+          </div>
+
+          <div id="emptyPreview" class="empty-state hidden">
+            <div class="empty-emblem" aria-hidden="true">⊞</div>
+            <h3 id="emptyPreviewTitle"></h3>
+            <p id="emptyPreviewDesc"></p>
+          </div>
+
+          <div id="paperStage" class="paper-stage">
+            <div id="academicPreview" class="academic-preview"></div>
+          </div>
+        </section>
+
+        <!-- 4. Multi-Format Export Studio -->
+        <section class="panel output-panel">
+          <div class="panel-head">
+            <h2 id="outputTitle" class="panel-title"></h2>
+            <div class="format-tabs" role="tablist">
+              <button type="button" class="tab-btn active" data-format="latex" id="tabLatex"></button>
+              <button type="button" class="tab-btn" data-format="word" id="tabWord">
+                <span id="tabWordText"></span>
+                <span class="pro-tag tab-pro-tag" id="tabWordProTag">PRO</span>
+              </button>
+              <button type="button" class="tab-btn" data-format="typst" id="tabTypst">
+                <span id="tabTypstText"></span>
+                <span class="pro-tag tab-pro-tag" id="tabTypstProTag">PRO</span>
+              </button>
+              <button type="button" class="tab-btn" data-format="markdown" id="tabMarkdown"></button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="export-actions">
+            <button id="copyPrimaryBtn" type="button" class="btn btn-primary btn-sm"></button>
+            <button id="copyWordQuickBtn" type="button" class="btn btn-soft btn-sm"></button>
+            <button id="downloadTexBtn" type="button" class="btn btn-outline btn-sm"></button>
+            <button id="copyCliBtn" type="button" class="btn btn-outline btn-sm">
+              <span id="copyCliText"></span>
+              <span class="pro-tag" id="cliProTag">PRO</span>
+            </button>
+          </div>
+
+          <p id="wordHint" class="word-hint hidden"></p>
+
+          <!-- Output Code Viewer / Pro Gate Overlay -->
+          <div class="code-stage">
+            <pre id="codeOutput" class="code-output"></pre>
+            <div id="proLockedOverlay" class="pro-locked-overlay hidden">
+              <div class="pro-locked-card">
+                <span class="pro-lock-pill">PRO</span>
+                <h3 id="proLockedOverlayTitle"></h3>
+                <p id="proLockedOverlayDesc"></p>
+                <button id="unlockFromOverlayBtn" type="button" class="btn btn-accent btn-sm"></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Pro License Modal -->
+  <div id="licenseModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalTitle" class="modal-title"></h2>
+          <p id="modalSubtitle" class="modal-subtitle"></p>
+        </div>
+        <button id="closeModalBtn" type="button" class="icon-close" aria-label="Close">&times;</button>
+      </div>
+
+      <div id="licenseActiveBox" class="license-active-box hidden">
+        <div id="licenseActiveText" class="license-active-text"></div>
+        <button id="deactivateBtn" type="button" class="btn btn-danger-outline btn-xs"></button>
+      </div>
+
+      <div class="tier-grid">
+        <div class="tier-card">
+          <h3 id="tierFreeTitle"></h3>
+          <ul id="tierFreeList"></ul>
+        </div>
+        <div class="tier-card tier-card-pro">
+          <h3 id="tierProTitle"></h3>
+          <ul id="tierProList"></ul>
+        </div>
+      </div>
+
+      <div class="buy-section">
+        <div id="buyTitle" class="section-label"></div>
+        <div class="buy-links">
+          <a id="buyMianbaoduo" class="btn btn-accent btn-sm" target="_blank" rel="noopener noreferrer"></a>
+          <a id="buyGumroad" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer"></a>
+        </div>
+      </div>
+
+      <form id="licenseForm" class="activate-section">
+        <label for="licenseKeyInput" id="activateLabel" class="section-label"></label>
+        <div class="activate-row">
+          <input id="licenseKeyInput" type="text" class="key-input" autocomplete="off" spellcheck="false" />
+          <button id="activateBtn" type="submit" class="btn btn-primary btn-sm"></button>
+        </div>
+        <div id="licenseError" class="form-error hidden"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
