@@ -31,7 +31,7 @@ export const LICENSE_PUBLIC_JWK = Object.freeze({
  * Storefront purchase links.
  */
 export const PURCHASE_URLS = Object.freeze({
-  gumroad: 'https://hxucreativity28.gumroad.com/',
+  gumroad: 'https://hxucreativity28.gumroad.com/l/gpsrkit-pro',
   mianbaoduo: 'https://mbd.pub/o/bread/YZaWmJ9uaA==',
 });
 
@@ -42,8 +42,8 @@ export const PURCHASE_URLS = Object.freeze({
  */
 export const ONLINE_LICENSE_PROVIDERS = Object.freeze({
   gumroad: Object.freeze({
-    enabled: false,
-    product_id: 'REPLACE_GUMROAD_PRODUCT_ID',
+    enabled: true,
+    product_id: 'BdK3b_7cxN0pk2s-efcXTg==',
     productPermalink: 'gpsrkit-pro',
     validateUrl: 'https://api.gumroad.com/v2/licenses/verify',
   }),
